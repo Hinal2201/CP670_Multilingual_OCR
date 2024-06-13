@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">CP670_Multilingual_OCR</string>
+    <string name="langSetting">Language Setting:</string>
+
+    <string-array name="language_settings_array">
+        <item>English</item>
+        <item>Español</item>
+    </string-array>
 </resources>
