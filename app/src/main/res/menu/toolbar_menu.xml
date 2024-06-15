@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:orderInCategory="101"
+        android:title="@string/Home"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_ocr"
+        android:icon="@android:drawable/ic_menu_camera"
+        android:orderInCategory="102"
+        android:title="@string/OCR"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_notes"
+        android:icon="@android:drawable/ic_input_get"
+        android:orderInCategory="103"
+        android:title="@string/Notes"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
+        android:orderInCategory="104"
+        android:title="@string/Settings"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_help"
+        android:icon="@android:drawable/ic_menu_help"
+        android:orderInCategory="105"
+        android:title="@string/Help"
+        app:showAsAction="ifRoom" />
+</menu>
