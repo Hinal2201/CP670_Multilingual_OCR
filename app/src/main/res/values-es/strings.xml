@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="Home">Inicio</string>
+    <string name="OCR">OCR</string>
+    <string name="Notes">Notas</string>
+    <string name="Settings">Configuración</string>
+    <string name="Help">Ayuda</string>
+
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Configuración de idioma:</string>
 </resources>

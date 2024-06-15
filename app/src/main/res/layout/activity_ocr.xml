@@ -7,6 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".OCR">
 
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <SurfaceView
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"

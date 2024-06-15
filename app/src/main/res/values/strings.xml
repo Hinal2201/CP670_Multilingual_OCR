@@ -1,4 +1,10 @@
 <resources>
+    <string name="Home">Home</string>
+    <string name="OCR">OCR</string>
+    <string name="Notes">Notes</string>
+    <string name="Settings">Settings</string>
+    <string name="Help">Help</string>
+
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Language Setting:</string>
 
