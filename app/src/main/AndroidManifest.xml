@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
     
-    <!-- Permissions for camera and external storage -->
+    <!-- Permissions for camera -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- If targeting Android 10 (API level 29) or higher, consider using scoped storage -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +30,7 @@
         <activity
             android:name=".OCR"
             android:exported="true" />
+  
         <activity
             android:name=".MainActivity"
             android:exported="true">
