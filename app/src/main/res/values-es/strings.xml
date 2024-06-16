@@ -6,6 +6,8 @@
     <string name="Settings">Configuración</string>
     <string name="Help">Ayuda</string>
 
+    <string name="main_pg_app_title">OCR Multilingüe</string>
+
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Configuración de idioma:</string>
 </resources>
