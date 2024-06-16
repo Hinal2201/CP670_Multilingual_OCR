@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -25,6 +26,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private Toolbar toolbar;
 
     // Declare the ActivityResultLauncher
     /*
@@ -42,37 +44,55 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         Log.i(TAG, "inside onCreate");
 
-        setContentView(R.layout.activity_main);
-
-        // Button startOcrButton = findViewById(R.id.start_ocr_button);
-        // startOcrButton.setOnClickListener(new View.OnClickListener() {
-        //     @Override
-        //     public void onClick(View v) {
-        //         // Start the OCR activity
-        //         startOcrActivity();
-        //     }
-        // });
+        super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
+        setContentView(getLayoutResource());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             setSupportActionBar(toolbar);
-            Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.bringToFront();
+        }
+
+        if (this.getClass().getSimpleName().equals("MainActivity")){
+            ImageButton ocrBtn = findViewById(R.id.section_ocr);
+            ImageButton notesBtn = findViewById(R.id.section_notes);
+            ImageButton settingsBtn = findViewById(R.id.section_settings);
+            ImageButton helpBtn = findViewById(R.id.section_help);
+
+            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(OCR.class));
+            notesBtn.setOnClickListener(v -> clickMainSectionBtn(NotesList.class));
+            settingsBtn.setOnClickListener(v -> clickMainSectionBtn(Settings.class));
+            helpBtn.setOnClickListener(v -> clickMainSectionBtn(Help.class));
+
         }
     }
 
+
     protected int getLayoutResource(){
         return R.layout.activity_main;
+    }
+
+    private void clickMainSectionBtn(Class<?> clickedActivity){
+        Log.i(TAG, "User clicked " + clickedActivity.getSimpleName() + " section");
+
+        if (clickedActivity == OCR.class){
+            Intent intent_ocr = new Intent(this, OCR.class);
+            ocrActivityResultLauncher.launch(intent_ocr);
+        } else {
+            Intent intent = new Intent(this, clickedActivity);
+            startActivity(intent);
+        }
     }
 
     @Override
@@ -93,9 +113,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (item_id == R.id.action_ocr) {
             Log.i(TAG, "User clicked OCR");
-//            Intent intent_ocr = new Intent(MainActivity.this, OCR.class);
-//            startActivity(intent_ocr);
-            startOcrActivity();
+           Intent intent_ocr = new Intent(this, OCR.class);
+           ocrActivityResultLauncher.launch(intent_ocr);
         }
         else if (item_id == R.id.action_notes) {
             Log.i(TAG, "User clicked Notes");
@@ -133,14 +152,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Method to start the OCR activity
-    /*
-     * Remarks: startOcrActivity can be clone in other activity class if calling OCR activity
-     */
-    private void startOcrActivity() {
-        Intent intent = new Intent(MainActivity.this, OCR.class);
-        ocrActivityResultLauncher.launch(intent);
-    }
+    // // Method to start the OCR activity
+    // /*
+    //  * Remarks: startOcrActivity can be clone in other activity class if calling OCR activity
+    //  */
+    // private void startOcrActivity() {
+    //     Intent intent = new Intent(MainActivity.this, OCR.class);
+    //     ocrActivityResultLauncher.launch(intent);
+    // }
 
     // Method to handle the result from the OCR activity
     /*
