@@ -19,9 +19,15 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    private final ActivityResultLauncher<Intent> ocrActivityResultLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            onReceiveOcrCallback(result.getResultCode(), result.getData());
+        }
+    );
+    
     // Define a unique request code for the OCR activity
     private static final int OCR_REQUEST_CODE = 1234; // Example unique request code
-    private ActivityResultLauncher<Intent> ocrActivityResultLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,23 +36,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        ocrActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    // Handle the result from the OCR activity
-                    Intent data = result.getData();
-                    Log.i("MainActivity", "Received recognized text: " + data.getStringExtra("recognizedText"));
-                }
-            }
-        );
-
         Button startOcrButton = findViewById(R.id.start_ocr_button);
         startOcrButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, OCR.class);
-                ocrActivityResultLauncher.launch(intent);
+                // Start the OCR activity
+                startOcrActivity();
             }
         });
 
@@ -64,17 +59,29 @@ public class MainActivity extends AppCompatActivity {
     
         // Check if the result comes from the OCR activity
         if (requestCode == OCR_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && data != null) {
-                // Extract the recognized text from the Intent
-                String recognizedText = data.getStringExtra("recognizedText");
-
-                // Use the recognized text here
-                Log.d("YourActivity", "Received recognized text: " + recognizedText);
-                // For example, update a TextView
-                // textView.setText(recognizedText);
-            } else {
-                Log.d("YourActivity", "No recognized text received");
-            }
+            onReceiveOcrCallback(resultCode, data);
         }
     }
+
+    // Method to start the OCR activity
+    private void startOcrActivity() {
+        Intent intent = new Intent(MainActivity.this, OCR.class);
+        ocrActivityResultLauncher.launch(intent);
+    }
+
+    // Method to handle the result from the OCR activity
+    private void onReceiveOcrCallback(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && data != null) {
+            // Extract the recognized text from the Intent
+            String recognizedText = data.getStringExtra("recognizedText");
+
+            // Use the recognized text here
+            Log.d("YourActivity", "Received recognized text: " + recognizedText);
+            // For example, update a TextView
+            // textView.setText(recognizedText);
+        } else {
+            Log.d("YourActivity", "No recognized text received");
+        }
+    }
+
 }

@@ -56,6 +56,8 @@ public class OCR extends AppCompatActivity {
         if (uri != null) {
             // TODO: Use MLKit or other OCR library to process the selected image
             Log.d("OCR", "Image selected: " + uri);
+        
+            processImageUri(uri);
         }
     });
 
@@ -68,48 +70,6 @@ public class OCR extends AppCompatActivity {
             Log.e("OCR", "Camera permission is required.");
         }
     });
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            Log.d("OCR", "Image selected: " + imageUri);
-
-            try {
-                InputImage inputImage = InputImage.fromFilePath(getApplicationContext(), imageUri);
-                processImageWithMLKit(inputImage, new TextRecognitionCallback() {
-                    @Override
-                    public void onTextRecognized(String recognizedText) {
-                        // Handle the recognized text here
-                        Log.d("OCR", "Extracted Text: " + recognizedText);
-
-                        // Create an Intent to hold the result
-                        Intent resultIntent = new Intent();
-                        // Put the recognized text into the Intent
-                        resultIntent.putExtra("recognizedText", recognizedText);
-                        // Set the result of the activity
-                        setResult(RESULT_OK, resultIntent);
-                        // Finish the activity and return to the calling activity
-                        finish();
-
-                    }
-    
-                    @Override
-                    public void onError(Exception e) {
-                        // Handle errors here
-                        Log.e("OCR", "Error recognizing text", e);
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("OCR", "Error loading image from URI", e);
-            }
-
-            
-        }
-    }
 
     private void initializeCamera() {
 
@@ -263,23 +223,46 @@ public class OCR extends AppCompatActivity {
         }
     }
 
+    private void processImageUri(Uri uri) {
+        // Your code to process the image URI, e.g., using ML Kit for OCR
+        Log.d("OCR", "Processing image: " + uri);
+        try {
+
+            // read image from uri
+            InputImage image = InputImage.fromFilePath(this, uri);
+            processImageWithMLKit(image, new TextRecognitionCallback() {
+                @Override
+                public void onTextRecognized(String recognizedText) {
+                    // Handle the recognized text here
+                    Log.d("OCR", "Extracted Text: " + recognizedText);
+
+                    // Create an Intent to hold the result
+                    Intent resultIntent = new Intent();
+                    // Put the recognized text into the Intent
+                    resultIntent.putExtra("recognizedText", recognizedText);
+                    // Set the result of the activity
+                    setResult(RESULT_OK, resultIntent);
+                    // Finish the activity and return to the calling activity
+                    finish();
+                }
+            
+                @Override
+                public void onError(Exception e) {
+                    // Handle errors here
+                    Log.e("OCR", "Error recognizing text", e);
+                }
+            });
+            
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     private void processImageWithMLKit(InputImage image, TextRecognitionCallback callback) {
-//        @SuppressLint("UnsafeOptInUsageError") Image.Plane[] planes = image.getPlanes();
-//        ByteBuffer buffer = planes[0].getBuffer();
-//        byte[] data = new byte[buffer.capacity()];
-//        buffer.get(data);
-//
-//        InputImage inputImage = InputImage.fromByteBuffer(
-//            ByteBuffer.wrap(data),
-//            image.getWidth(),
-//            image.getHeight(),
-//            image.getImageInfo().getRotationDegrees(),
-//            InputImage.IMAGE_FORMAT_NV21 // or IMAGE_FORMAT_YV12
-//        );
-    
+
         TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-    
-//        recognizer.process(inputImage)
+
         recognizer.process(image)
             .addOnSuccessListener(text -> {
                 // Process recognized text
