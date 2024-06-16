@@ -1,9 +1,14 @@
 <resources>
+    <color name="toolbar_bg">#ECEFF4</color>
+    <color name="main_btn_bg">#e4e5f1</color>
+
     <string name="Home">Home</string>
     <string name="OCR">OCR</string>
     <string name="Notes">Notes</string>
     <string name="Settings">Settings</string>
     <string name="Help">Help</string>
+
+    <string name="main_pg_app_title">Multilingual OCR</string>
 
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Language Setting:</string>

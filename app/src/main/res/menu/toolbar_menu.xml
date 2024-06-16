@@ -15,7 +15,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/action_notes"
-        android:icon="@android:drawable/ic_input_get"
+        android:icon="@android:drawable/ic_menu_edit"
         android:orderInCategory="103"
         android:title="@string/Notes"
         app:showAsAction="always" />

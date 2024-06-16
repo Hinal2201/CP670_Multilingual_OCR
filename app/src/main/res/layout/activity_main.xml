@@ -13,13 +13,168 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
+    <ScrollView
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_max="450dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_pg_app_title"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.183" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="480dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:scaleType="fitXY">
+
+                        <ImageButton
+                            android:id="@+id/section_ocr"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_gravity="top"
+                            android:background="@color/main_btn_bg"
+                            android:contentDescription="@string/OCR"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="@string/OCR"
+                            android:textSize="20sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:scaleType="fitXY">
+
+                        <ImageButton
+                            android:id="@+id/section_notes"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_gravity="top"
+                            android:background="@color/main_btn_bg"
+                            android:contentDescription="@string/Notes"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="@string/Notes"
+                            android:textSize="20sp" />
+                    </FrameLayout>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:scaleType="fitXY">
+
+                        <ImageButton
+                            android:id="@+id/section_settings"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_gravity="top"
+                            android:background="@color/main_btn_bg"
+                            android:contentDescription="@string/Settings"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="@string/Settings"
+                            android:textSize="20sp" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:padding="5dp"
+                        android:scaleType="fitXY">
+
+                        <ImageButton
+                            android:id="@+id/section_help"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_gravity="top"
+                            android:background="@color/main_btn_bg"
+                            android:contentDescription="@string/Help"
+                            android:scaleType="fitXY"
+                            app:srcCompat="@android:drawable/ic_menu_help" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="@string/Help"
+                            android:textSize="20sp" />
+                    </FrameLayout>
+                </TableRow>
+            </TableLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,11 +40,31 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.bringToFront();
+        }
+
+        if (this.getClass().getSimpleName().equals("MainActivity")){
+            ImageButton ocrBtn = findViewById(R.id.section_ocr);
+            ImageButton notesBtn = findViewById(R.id.section_notes);
+            ImageButton settingsBtn = findViewById(R.id.section_settings);
+            ImageButton helpBtn = findViewById(R.id.section_help);
+
+//            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(OCR.class));
+            notesBtn.setOnClickListener(v -> clickMainSectionBtn(NotesList.class));
+            settingsBtn.setOnClickListener(v -> clickMainSectionBtn(Settings.class));
+            helpBtn.setOnClickListener(v -> clickMainSectionBtn(Help.class));
+
         }
     }
 
     protected int getLayoutResource(){
         return R.layout.activity_main;
+    }
+
+    private void clickMainSectionBtn(Class<?> clickedActivity){
+        Log.i(TAG, "User clicked " + clickedActivity.getSimpleName() + " section");
+        Intent intent = new Intent(this, clickedActivity);
+        startActivity(intent);
     }
 
     @Override
