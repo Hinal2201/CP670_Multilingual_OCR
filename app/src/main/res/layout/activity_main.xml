@@ -57,7 +57,9 @@
                     android:layout_weight="1">
 
                     <FrameLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
@@ -83,7 +85,9 @@
                     </FrameLayout>
 
                     <FrameLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
@@ -115,7 +119,9 @@
                     android:layout_weight="1">
 
                     <FrameLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
@@ -141,7 +147,9 @@
                     </FrameLayout>
 
                     <FrameLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
+                        app:layout_constraintWidth_default="percent"
+                        app:layout_constraintWidth_max="450dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
