@@ -8,4 +8,7 @@
 
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Configuración de idioma:</string>
+
+    <string name="capture">Capture</string>
+    <string name="select_image">Select Image</string>
 </resources>
