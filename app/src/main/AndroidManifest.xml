@@ -7,7 +7,12 @@
         android:name="android.hardware.camera"
         android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
-
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="image/*" />
+        </intent>
+    </queries>
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,7 +22,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CP670_Multilingual_OCR"
+        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
+
+
         <activity
             android:name=".Help"
             android:exported="false" />
@@ -29,8 +37,8 @@
             android:exported="false" />
         <activity
             android:name=".OCR"
-            android:exported="true" />
-  
+            android:parentActivityName=".MainActivity" 
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
