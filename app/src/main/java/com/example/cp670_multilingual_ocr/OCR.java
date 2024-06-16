@@ -44,8 +44,9 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 
-public class OCR extends AppCompatActivity {
-    
+public class OCR extends MainActivity {
+    private static final String TAG = "OCR";
+
     private SurfaceView cameraPreview;
     private static final int REQUEST_CAMERA_PERMISSION = 1;
     private ImageCapture imageCapture = null;
@@ -186,12 +187,9 @@ public class OCR extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ocr);
+        Log.i(TAG, "inside onCreate");
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
+        super.onCreate(savedInstanceState);
 
         PreviewView cameraPreview = findViewById(R.id.camera_preview);
         Button captureButton = findViewById(R.id.capture_button);
@@ -208,6 +206,11 @@ public class OCR extends AppCompatActivity {
         Button selectImageButton = findViewById(R.id.select_image_button);
         selectImageButton.setOnClickListener(v -> selectImageLauncher.launch("image/*"));
 
+    }
+
+    @Override
+        protected int getLayoutResource() {
+        return R.layout.activity_ocr;
     }
 
     @Override
