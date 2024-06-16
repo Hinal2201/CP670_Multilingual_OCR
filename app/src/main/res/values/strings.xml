@@ -12,6 +12,15 @@
 
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Language Setting:</string>
+    <string name="authors">Authors: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
+    <string name="version">Version: 1.0</string>
+    <string name="usage_instructions">
+        <b>Usage Instructions:</b> \n\n
+        1. Use the OCR feature to scan text from images.\n
+        2. Manage your notes in the Notes List section.\n
+        3. Customize your preferences in the Settings section.\n
+        4. Refer to this Help section for assistance.
+    </string>
 
     <string-array name="language_settings_array">
         <item>English</item>
