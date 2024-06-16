@@ -6,17 +6,9 @@
     <string name="Settings">Configuración</string>
     <string name="Help">Ayuda</string>
 
-    <string name="main_pg_app_title">OCR Multilingüe</string>
-
     <string name="app_name">CP670_Multilingual_OCR</string>
     <string name="langSetting">Configuración de idioma:</string>
-    <string name="authors">Autores: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
-    <string name="version">Versión: 1.0</string>
-    <string name="usage_instructions">
-        <b>Instrucciones de uso:</b> \n\n
-        1. Utilice la función OCR para escanear texto de imágenes.\n
-        2. Administre sus notas en la sección Lista de notas.\n
-        3. Personaliza tus preferencias en la sección Configuración.\n
-        4. Consulte esta sección de Ayuda para obtener ayuda.
-    </string>
+
+    <string name="capture">Capture</string>
+    <string name="select_image">Select Image</string>
 </resources>

@@ -26,4 +26,7 @@
         <item>English</item>
         <item>Español</item>
     </string-array>
+
+    <string name="capture">Capture</string>
+    <string name="select_image">Select Image</string>
 </resources>
