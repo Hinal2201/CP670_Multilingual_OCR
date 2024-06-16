@@ -19,6 +19,10 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
+    // Declare the ActivityResultLauncher
+    /*
+     * Remarks: can move this private class attributes orcActivityResultLauncher to other activity class
+     */
     private final ActivityResultLauncher<Intent> ocrActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> {
@@ -53,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -64,12 +71,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Method to start the OCR activity
+    /*
+     * Remarks: startOcrActivity can be clone in other activity class if calling OCR activity
+     */
     private void startOcrActivity() {
         Intent intent = new Intent(MainActivity.this, OCR.class);
         ocrActivityResultLauncher.launch(intent);
     }
 
     // Method to handle the result from the OCR activity
+    /*
+     * Remarks: onReceiveOcrCallback can be clone in other activity class if calling OCR activity
+     */
     private void onReceiveOcrCallback(int resultCode, Intent data) {
         if (resultCode == RESULT_OK && data != null) {
             // Extract the recognized text from the Intent
