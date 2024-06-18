@@ -6,8 +6,8 @@
     <string name="Settings">Configuración</string>
     <string name="Help">Ayuda</string>
 
-    <string name="main_pg_app_title">Multilingual OCR</string>
-    <string name="app_name">CP670_Multilingual_OCR</string>
+    <string name="main_pg_app_title">Lingua Capture </string>
+    <string name="app_name">Lingua Capture</string>
     <string name="langSetting">Configuración de idioma:</string>
 
     <string name="capture">Capture</string>
@@ -21,4 +21,5 @@
         3. Personaliza tus preferencias en la sección Configuración.\n
         4. Consulte esta sección de Ayuda para obtener ayuda.
     </string>
+    <string name="notes_list">Página de lista de notas</string>
 </resources>
