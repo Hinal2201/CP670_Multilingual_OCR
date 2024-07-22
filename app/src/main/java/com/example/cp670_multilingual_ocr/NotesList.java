@@ -1,23 +1,38 @@
 package com.example.cp670_multilingual_ocr;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.google.android.material.snackbar.Snackbar;
 
-public class NotesList extends MainActivity {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+
+public class NotesList extends MainActivity implements NoteAdapter.OnItemClickListener {
     private static final String TAG = "NotesList";
+    private SQLiteDatabase database;
+    private ArrayList<String> noteTitles;
+    private HashMap<Integer, ArrayList<String>> posToIdnNote;
+    private Cursor cursor;
+    private NoteAdapter noteAdapter;
+    FrameLayout fl;
+    private static final Integer LAUNCH_NOTE_DETAILS = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,36 +47,26 @@ public class NotesList extends MainActivity {
             return insets;
         });
 
+        // Get database reference:
 
         NoteDatabaseHelper dbHelper = new NoteDatabaseHelper(this);
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        database = dbHelper.getWritableDatabase();
 
-        // -- Fill out note titles:
+        // -- Fill up note data:
 
-        ArrayList<String> noteTitles = new ArrayList<>();
+        noteTitles = new ArrayList<>();
+        posToIdnNote = new HashMap<>();
+        loadNotes(true);
 
-        Cursor cursor = database.query(
-                NoteDatabaseHelper.TABLE_NAME, null, null, null, null,
-                null, null);
+        // -- Get frame layout reference
 
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            int titleIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_TITLE);
-            String title = cursor.getString(titleIdx);
-
-            int noteIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_NOTE);
-            String note = cursor.getString(noteIdx);
-
-            noteTitles.add(title);
-
-            cursor.moveToNext();
-        }
+        fl = findViewById(R.id.noteNote);
 
         // -- fill out the recycler view:
 
-        NoteAdapter noteAdapter = new NoteAdapter(noteTitles);
+        noteAdapter = new NoteAdapter(noteTitles, this);
         RecyclerView recyclerView = findViewById(R.id.recyclerNotes);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns(this)));
+        recyclerView.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns(this, fl != null)));
         recyclerView.setAdapter(noteAdapter);
     }
 
@@ -70,9 +75,117 @@ public class NotesList extends MainActivity {
         return R.layout.activity_notes_list;
     }
 
-    public static int calculateNoOfColumns(Context context) {
+    public static int calculateNoOfColumns(Context context, boolean isMultiLayout) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+
+        if(isMultiLayout){
+            return 2;
+        }
         return (int) (dpWidth / 180);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int responseCode, Intent data) {
+        super.onActivityResult(requestCode, responseCode, data);
+
+        if (requestCode == LAUNCH_NOTE_DETAILS && responseCode == RESULT_OK) {
+            Integer pos = Integer.valueOf(data.getStringExtra("pos"));
+            String id = data.getStringExtra("id");
+            deleteNote(id, pos);
+        }
+    }
+
+    public void deleteNote(String id, Integer pos) {
+        database.delete(NoteDatabaseHelper.TABLE_NAME, NoteDatabaseHelper.KEY_ID + "=?", new String[]{id});
+
+        String removedNoteTitle = noteTitles.get(pos);
+        removedNoteTitle = removedNoteTitle.length() > 8 ? removedNoteTitle.substring(0,8) + "..." : removedNoteTitle;
+        noteTitles.remove(pos);
+
+        loadNotes(false);
+        noteAdapter.deleteItem(pos);
+        removeFragmentIfExists(R.id.noteNote);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.main), "Note titled: " + removedNoteTitle + " deleted!", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    public void removeFragmentIfExists(int id) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(id);
+        if (fragment != null) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+        }
+    }
+
+    public void loadNotes(boolean isInitializing) {
+        cursor = database.query(
+                NoteDatabaseHelper.TABLE_NAME, null, null, null, null,
+                null, null);
+        cursor.moveToFirst();
+        int i = 0;
+        while (!cursor.isAfterLast()) {
+            int idIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_ID);
+            String id = cursor.getString(idIdx);
+
+            int titleIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_TITLE);
+            String title = cursor.getString(titleIdx);
+
+            int noteIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_NOTE);
+            String note = cursor.getString(noteIdx);
+
+            if (isInitializing) {
+                noteTitles.add(title);
+            }
+            ArrayList<String> noteFull = new ArrayList<>(Arrays.asList(id, note));
+            posToIdnNote.put(i, noteFull);
+
+            cursor.moveToNext();
+            i++;
+        }
+    }
+
+    // -- Recycler note item click listener
+    @Override
+    public void onItemClick(int position) {
+        ArrayList<String> cache = posToIdnNote.get(position);
+        String id = cache.get(0);
+        String title = noteTitles.get(position);
+        String note = cache.get(1);
+
+        Log.i(TAG, "item " + position + " clicked");
+
+        if (fl != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString("pos", String.valueOf(position));
+            bundle.putString("id", String.valueOf(id));
+            bundle.putString("title", title);
+            bundle.putString("note", note);
+
+            removeFragmentIfExists(R.id.noteNote);
+            NoteFragment frag = new NoteFragment(this);
+            frag.setArguments(bundle);
+
+            FragmentTransaction ft =
+                    getSupportFragmentManager().beginTransaction();
+
+            ft.add(R.id.noteNote, frag);
+            ft.commit();
+        } else {
+            Intent resultIntent = new Intent(NotesList.this, NoteDetails.class);
+            resultIntent.putExtra("pos", String.valueOf(position));
+            resultIntent.putExtra("id", String.valueOf(id));
+            resultIntent.putExtra("title", title);
+            resultIntent.putExtra("note", note);
+            startActivityForResult(resultIntent, LAUNCH_NOTE_DETAILS);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "inside onDestroy");
+        super.onDestroy();
+        database.close();
+        cursor.close();
     }
 }

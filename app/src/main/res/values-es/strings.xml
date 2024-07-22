@@ -20,6 +20,10 @@
         4. Consulte esta sección de Ayuda para obtener ayuda.
     </string>
 
+    <string name="note_title">título</string>
+    <string name="note_note">nota</string>
+    <string name="delete_btn_text">Borrar</string>
+
     <string name="capture">Capture</string>
     <string name="select_image">Select Image</string>
     <string name="notes_list">Página de lista de notas</string>

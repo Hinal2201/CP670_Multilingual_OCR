@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    
     <!-- Permissions for camera -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <queries>
         <intent>
             <action android:name="android.intent.action.GET_CONTENT" />
+
             <data android:mimeType="image/*" />
         </intent>
     </queries>
@@ -20,13 +22,14 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CP670_Multilingual_OCR"
-        android:requestLegacyExternalStorage="true"
         tools:targetApi="31">
-
-
+        <activity
+            android:name=".NoteDetails"
+            android:exported="false" />
         <activity
             android:name=".Help"
             android:exported="false" />
