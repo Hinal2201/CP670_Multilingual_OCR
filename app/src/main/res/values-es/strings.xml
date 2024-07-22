@@ -10,8 +10,6 @@
     <string name="app_name">Lingua Capture</string>
     <string name="langSetting">Configuración de idioma:</string>
 
-    <string name="capture">Capture</string>
-    <string name="select_image">Select Image</string>
     <string name="authors">Autores: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
     <string name="version">Versión: 1.0</string>
     <string name="usage_instructions">
@@ -21,5 +19,12 @@
         3. Personaliza tus preferencias en la sección Configuración.\n
         4. Consulte esta sección de Ayuda para obtener ayuda.
     </string>
+
+    <string name="note_title">título</string>
+    <string name="note_note">nota</string>
+    <string name="delete_btn_text">Borrar</string>
+
+    <string name="capture">Capture</string>
+    <string name="select_image">Select Image</string>
     <string name="notes_list">Página de lista de notas</string>
 </resources>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/noteTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_margin="15dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:text="@string/note_title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        />
+
+    <ScrollView
+        android:id="@+id/notesListScroll"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/noteTitle"
+        android:layout_above="@+id/noteDelete"
+        android:background="@color/note_item_bg">
+        <TextView
+            android:id="@+id/noteNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:layout_marginTop="-35dp"
+            android:gravity="start"
+            android:text="@string/note_note"
+            android:textSize="20sp"
+            />
+    </ScrollView>
+
+    <Button
+        android:id="@+id/noteDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginBottom="2dp"
+        android:text="@string/delete_btn_text"
+        android:textSize="18sp" />
+</RelativeLayout>
