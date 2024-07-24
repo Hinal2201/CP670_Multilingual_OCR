@@ -1,7 +1,5 @@
 package com.example.cp670_multilingual_ocr;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +25,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
             textView = view.findViewById(R.id.noteTitleRecycler);
             textView.setOnClickListener(v -> {
-                int pos = getBindingAdapterPosition();
+                int pos = getAdapterPosition();
 
                 if (pos != RecyclerView.NO_POSITION){
                     listener.onItemClick(pos);
@@ -57,7 +55,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(NoteAdapter.ViewHolder viewHolder, final int position) {
-        Log.i(TAG, "" + position);
         viewHolder.getTextView().setText(localDataSet.get(position));
     }
 
