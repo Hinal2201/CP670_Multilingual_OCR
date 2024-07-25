@@ -40,7 +40,7 @@
             android:name=".NotesList"
             android:exported="false" />
         <activity
-            android:name=".OCR"
+            android:name=".CameraXActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
