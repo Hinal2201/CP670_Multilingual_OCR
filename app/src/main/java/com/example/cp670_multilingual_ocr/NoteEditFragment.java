@@ -13,17 +13,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class NoteFragment extends Fragment {
+public class NoteEditFragment extends Fragment {
     NotesList nl;
 
-    public NoteFragment(NotesList nl){ this.nl = nl;}
+    public NoteEditFragment(NotesList nl){ this.nl = nl;}
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup parent,
                              @Nullable Bundle savedInstanceState) {
 
-        return inflater.inflate(R.layout.note_fragment, parent, false);
+        return inflater.inflate(R.layout.note_edit_fragment, parent, false);
     }
 
     @Override
