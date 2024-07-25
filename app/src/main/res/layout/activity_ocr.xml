@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center" 
-            android:padding="16dp">
+            android:padding="24dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnOcrTakePicture"
@@ -58,25 +58,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/button_label_fromgallery"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="24dp"
                 />
 
         </LinearLayout>
 
-        <!-- <LinearLayout
-            android:id="@+id/imageContainer" 
+        <LinearLayout
+            android:id="@+id/imageContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:gravity="center">
 
+            <!-- <ImageView
+                android:id="@+id/imagePlaceholder"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:contentDescription="content description"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_placeholder" 
+                /> -->
             <ImageView
                 android:id="@+id/imagePlaceholder"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:contentDescription="" />
+                android:contentDescription="content description"
+                android:scaleType="fitXY"
+                android:src="@drawable/image_placeholder" 
+                android:padding="24dp"
+                />
 
-        </LinearLayout> -->
+        </LinearLayout>
 
  
 
