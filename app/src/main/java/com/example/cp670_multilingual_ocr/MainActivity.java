@@ -22,19 +22,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Toolbar toolbar;
 
-    // Declare the ActivityResultLauncher
-    /*
-     * Remarks: can move this private class attributes orcActivityResultLauncher to other activity class
-     */
-    private final ActivityResultLauncher<Intent> ocrActivityResultLauncher = registerForActivityResult(
-        new ActivityResultContracts.StartActivityForResult(),
-        result -> {
-            onReceiveOcrCallback(result.getResultCode(), result.getData());
-        }
-    );
+//    // Declare the ActivityResultLauncher
+//    /*
+//     * Remarks: can move this private class attributes orcActivityResultLauncher to other activity class
+//     */
+//    private final ActivityResultLauncher<Intent> ocrActivityResultLauncher = registerForActivityResult(
+//        new ActivityResultContracts.StartActivityForResult(),
+//        result -> {
+//            onReceiveOcrCallback(result.getResultCode(), result.getData());
+//        }
+//    );
     
-    // Define a unique request code for the OCR activity
-    private static final int OCR_REQUEST_CODE = 1234; // Example unique request code
+//    // Define a unique request code for the OCR activity
+//    private static final int OCR_REQUEST_CODE = 1234; // Example unique request code
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
             ImageButton settingsBtn = findViewById(R.id.section_settings);
             ImageButton helpBtn = findViewById(R.id.section_help);
 
-            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(CameraXActivity.class));
+//            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(CameraXActivity.class));
+            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(OCR.class));
             notesBtn.setOnClickListener(v -> clickMainSectionBtn(NotesList.class));
             settingsBtn.setOnClickListener(v -> clickMainSectionBtn(Settings.class));
             helpBtn.setOnClickListener(v -> clickMainSectionBtn(Help.class));
@@ -80,13 +81,16 @@ public class MainActivity extends AppCompatActivity {
     private void clickMainSectionBtn(Class<?> clickedActivity){
         Log.i(TAG, "User clicked " + clickedActivity.getSimpleName() + " section");
 
-        if (clickedActivity == CameraXActivity.class){
-            Intent intent_ocr = new Intent(this, CameraXActivity.class);
-            ocrActivityResultLauncher.launch(intent_ocr);
-        } else {
-            Intent intent = new Intent(this, clickedActivity);
-            startActivity(intent);
-        }
+//        if (clickedActivity == CameraXActivity.class){
+//            Intent intent_ocr = new Intent(this, CameraXActivity.class);
+//            ocrActivityResultLauncher.launch(intent_ocr);
+//        } else {
+//            Intent intent = new Intent(this, clickedActivity);
+//            startActivity(intent);
+//        }
+        Intent intent = new Intent(this, clickedActivity);
+        startActivity(intent);
+
     }
 
     @Override
@@ -107,8 +111,10 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (item_id == R.id.action_ocr) {
             Log.i(TAG, "User clicked OCR");
-           Intent intent_ocr = new Intent(this, CameraXActivity.class);
-           ocrActivityResultLauncher.launch(intent_ocr);
+//            Intent intent_ocr = new Intent(this, CameraXActivity.class);
+//           ocrActivityResultLauncher.launch(intent_ocr);
+            Intent intent_ocr = new Intent(this, OCR.class);
+            startActivity(intent_ocr);
         }
         else if (item_id == R.id.action_notes) {
             Log.i(TAG, "User clicked Notes");
@@ -133,18 +139,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    /*
-     * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    
-        // Check if the result comes from the OCR activity
-        if (requestCode == OCR_REQUEST_CODE) {
-            onReceiveOcrCallback(resultCode, data);
-        }
-    }
+//    /*
+//     * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
+//     */
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        // Check if the result comes from the OCR activity
+//        if (requestCode == OCR_REQUEST_CODE) {
+//            onReceiveOcrCallback(resultCode, data);
+//        }
+//    }
 
     // // Method to start the OCR activity
     // /*
