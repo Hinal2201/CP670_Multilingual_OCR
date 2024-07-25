@@ -14,11 +14,8 @@ import android.provider.MediaStore;
 import android.view.SurfaceView;
 import android.widget.Button;
 import android.util.Log;
-import android.annotation.SuppressLint;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCapture.OutputFileOptions;
@@ -36,7 +33,6 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import java.nio.ByteBuffer;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
@@ -44,7 +40,7 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
 
-public class OCR extends MainActivity {
+public class CameraXActivity extends MainActivity {
     private static final String TAG = "OCR";
 
     private SurfaceView cameraPreview;
@@ -57,7 +53,7 @@ public class OCR extends MainActivity {
     private final ActivityResultLauncher<String> selectImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
         if (uri != null) {
             // TODO: Use MLKit or other OCR library to process the selected image
-            Log.d("OCR", "Image selected: " + uri);
+            Log.d("CameraX", "Image selected: " + uri);
         
             processImageUri(uri);
         }
@@ -69,7 +65,7 @@ public class OCR extends MainActivity {
             initializeCamera();
         } else {
             // Handle permission denial
-            Log.e("OCR", "Camera permission is required.");
+            Log.e("CameraX", "Camera permission is required.");
         }
     });
 
@@ -119,7 +115,7 @@ public class OCR extends MainActivity {
 
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
-                Log.d("OCR", "Image called back");
+                Log.d("CameraX", "Image called back");
                 InputImage inputImage = null;
                 Image mediaImage = imageProxy.getImage();
                 if (mediaImage != null) {
@@ -128,7 +124,7 @@ public class OCR extends MainActivity {
                 }
 
                 if (inputImage == null) {
-                    Log.e("OCR", "InputImage is null");
+                    Log.e("CameraX", "InputImage is null");
                     return;
                 }
 
@@ -136,7 +132,7 @@ public class OCR extends MainActivity {
                     @Override
                     public void onTextRecognized(String recognizedText) {
                         // Handle the recognized text here
-                        Log.d("OCR", "Extracted Text: " + recognizedText);
+                        Log.d("CameraX", "Extracted Text: " + recognizedText);
 
                         // Create an Intent to hold the result
                         Intent resultIntent = new Intent();
@@ -151,7 +147,7 @@ public class OCR extends MainActivity {
                     @Override
                     public void onError(Exception e) {
                         // Handle errors here
-                        Log.e("OCR", "Error recognizing text", e);
+                        Log.e("CameraX", "Error recognizing text", e);
                     }
                 });
 
@@ -166,7 +162,7 @@ public class OCR extends MainActivity {
 
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
-                Log.e("OCR", "Image capture failed: " + exception.getMessage(), exception);
+                Log.e("CameraX", "Image capture failed: " + exception.getMessage(), exception);
             }
             
         });
@@ -210,7 +206,7 @@ public class OCR extends MainActivity {
 
     @Override
         protected int getLayoutResource() {
-        return R.layout.activity_ocr;
+        return R.layout.activity_camerax;
     }
 
     @Override
@@ -222,14 +218,14 @@ public class OCR extends MainActivity {
             }
             else {
                 // Handle permission denial
-                Log.e("OCR", "Camera permission was denied.");
+                Log.e("CameraX", "Camera permission was denied.");
             }
         }
     }
 
     private void processImageUri(Uri uri) {
         // Your code to process the image URI, e.g., using ML Kit for OCR
-        Log.d("OCR", "Processing image: " + uri);
+        Log.d("CameraX", "Processing image: " + uri);
         try {
 
             // read image from uri
@@ -238,7 +234,7 @@ public class OCR extends MainActivity {
                 @Override
                 public void onTextRecognized(String recognizedText) {
                     // Handle the recognized text here
-                    Log.d("OCR", "Extracted Text: " + recognizedText);
+                    Log.d("CameraX", "Extracted Text: " + recognizedText);
 
                     // Create an Intent to hold the result
                     Intent resultIntent = new Intent();
@@ -253,7 +249,7 @@ public class OCR extends MainActivity {
                 @Override
                 public void onError(Exception e) {
                     // Handle errors here
-                    Log.e("OCR", "Error recognizing text", e);
+                    Log.e("CameraX", "Error recognizing text", e);
                 }
             });
             
@@ -271,12 +267,12 @@ public class OCR extends MainActivity {
             .addOnSuccessListener(text -> {
                 // Process recognized text
                 String recognizedText = text.getText();
-                Log.d("OCR", "Recognized Text: " + recognizedText);
+                Log.d("CameraX", "Recognized Text: " + recognizedText);
                 callback.onTextRecognized(recognizedText); // Use the callback to return the text
             })
             .addOnFailureListener(e -> {
                 // Handle failure
-                Log.e("OCR", "Text recognition failed", e);
+                Log.e("CameraX", "Text recognition failed", e);
                 callback.onError(e); // Use the callback to return the error
             });
     }

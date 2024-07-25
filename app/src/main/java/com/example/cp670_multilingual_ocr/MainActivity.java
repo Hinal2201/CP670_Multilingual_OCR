@@ -1,12 +1,8 @@
 package com.example.cp670_multilingual_ocr;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.graphics.drawable.Drawable;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,8 +17,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
-import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -70,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             ImageButton settingsBtn = findViewById(R.id.section_settings);
             ImageButton helpBtn = findViewById(R.id.section_help);
 
-            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(OCR.class));
+            ocrBtn.setOnClickListener(v -> clickMainSectionBtn(CameraXActivity.class));
             notesBtn.setOnClickListener(v -> clickMainSectionBtn(NotesList.class));
             settingsBtn.setOnClickListener(v -> clickMainSectionBtn(Settings.class));
             helpBtn.setOnClickListener(v -> clickMainSectionBtn(Help.class));
@@ -86,8 +80,8 @@ public class MainActivity extends AppCompatActivity {
     private void clickMainSectionBtn(Class<?> clickedActivity){
         Log.i(TAG, "User clicked " + clickedActivity.getSimpleName() + " section");
 
-        if (clickedActivity == OCR.class){
-            Intent intent_ocr = new Intent(this, OCR.class);
+        if (clickedActivity == CameraXActivity.class){
+            Intent intent_ocr = new Intent(this, CameraXActivity.class);
             ocrActivityResultLauncher.launch(intent_ocr);
         } else {
             Intent intent = new Intent(this, clickedActivity);
@@ -113,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (item_id == R.id.action_ocr) {
             Log.i(TAG, "User clicked OCR");
-           Intent intent_ocr = new Intent(this, OCR.class);
+           Intent intent_ocr = new Intent(this, CameraXActivity.class);
            ocrActivityResultLauncher.launch(intent_ocr);
         }
         else if (item_id == R.id.action_notes) {
