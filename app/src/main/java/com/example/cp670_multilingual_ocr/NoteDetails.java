@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -46,7 +45,7 @@ public class NoteDetails extends MainActivity {
         FragmentTransaction ft =
                 getSupportFragmentManager().beginTransaction();
 
-        ft.add(R.id.noteNoteSeparate, frag);
+        ft.add(R.id.noteNoteInNewWindow, frag);
         ft.commit();
     }
 
