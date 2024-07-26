@@ -22,16 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     private Toolbar toolbar;
 
-//    // Declare the ActivityResultLauncher
-//    /*
-//     * Remarks: can move this private class attributes orcActivityResultLauncher to other activity class
-//     */
-//    private final ActivityResultLauncher<Intent> ocrActivityResultLauncher = registerForActivityResult(
-//        new ActivityResultContracts.StartActivityForResult(),
-//        result -> {
-//            onReceiveOcrCallback(result.getResultCode(), result.getData());
-//        }
-//    );
     
 //    // Define a unique request code for the OCR activity
 //    private static final int OCR_REQUEST_CODE = 1234; // Example unique request code
@@ -139,18 +129,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-//    /*
-//     * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
-//     */
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        // Check if the result comes from the OCR activity
-//        if (requestCode == OCR_REQUEST_CODE) {
-//            onReceiveOcrCallback(resultCode, data);
-//        }
-//    }
 
     // // Method to start the OCR activity
     // /*
@@ -161,22 +139,6 @@ public class MainActivity extends AppCompatActivity {
     //     ocrActivityResultLauncher.launch(intent);
     // }
 
-    // Method to handle the result from the OCR activity
-    /*
-     * Remarks: onReceiveOcrCallback can be clone in other activity class if calling OCR activity
-     */
-    private void onReceiveOcrCallback(int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && data != null) {
-            // Extract the recognized text from the Intent
-            String recognizedText = data.getStringExtra("recognizedText");
 
-            // Use the recognized text here
-            Log.d("MainActivity", "Received recognized text: " + recognizedText);
-            // For example, update a TextView
-            // textView.setText(recognizedText);
-        } else {
-            Log.d("MainActivity", "No recognized text received");
-        }
-    }
 
 }

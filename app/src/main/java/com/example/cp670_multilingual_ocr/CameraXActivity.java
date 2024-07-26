@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,7 +34,9 @@ import androidx.core.content.ContextCompat;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
 
 
@@ -66,9 +69,9 @@ public class CameraXActivity extends MainActivity {
         super.onCreate(savedInstanceState);
 
         PreviewView cameraPreview = findViewById(R.id.camera_preview);
-        Button captureButton = findViewById(R.id.capture_button);
 
         // Set up the capture button onClickListener
+        Button captureButton = findViewById(R.id.capture_button);
         captureButton.setOnClickListener(v -> capturePhoto());
 
         // Check for camera permissions
@@ -171,48 +174,61 @@ public class CameraXActivity extends MainActivity {
 
                 // Get the Image object from the ImageProxy
                 Image mediaImage = imageProxy.getImage();
+
                 if (mediaImage != null) { // Image object is not null
+
+                    Log.d(TAG, "Image object is not null");
+
                     // Create an InputImage instance from the Image object
-                    inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                    int imageRotationDegrees = imageProxy.getImageInfo().getRotationDegrees();
+                    Log.d(TAG, "Rotation degrees: " + imageRotationDegrees);
+
+                    // Obtain input image from media storage
+                    Log.d(TAG, "Obtain input image from media Stroage");
+                    inputImage = InputImage.fromMediaImage(mediaImage, imageRotationDegrees);
+
+
+                    // Convert InputImage to Bitmap
+                    Log.d(TAG, "Convert InputImage to Bitmap");
+                    Bitmap bitmap = inputImage.getBitmapInternal();
+
+                    // Initialize Content Values
+                    Log.d(TAG, "Initialize Content Values");
+                    ContentValues values = new ContentValues();
+
+                    // Put the image data into the Content Values
+                    Log.d(TAG, "Put the image data into the Content Values");
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/png");
+                    values.put(MediaStore.Images.Media.DISPLAY_NAME, "captured_image_" + System.currentTimeMillis() + ".png");
+                    values.put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+                    // Insert the image data into the Media Store and obtain imageUri
+                    Log.d(TAG, "Insert the image data into the Media Store and obtain imageUri");
+                    Uri imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    Log.d(TAG, "Image URI: " + imageUri);
+
+                    // Save the bitmap to the gallery
+                    Log.d(TAG, "Save the bitmap to the gallery");
+                    try (OutputStream out = getContentResolver().openOutputStream(imageUri)) {
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+                        Log.d(TAG, "Image saved to gallery");
+                    } catch (IOException e) {
+                        Log.e(TAG, "Failed to save image to gallery", e);
+                    }
+
+                    // Return imageUri back to calling activity
+                    Log.d(TAG, "Return imageUri back to calling activity");
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("imageUri", imageUri.toString());
+                    setResult(RESULT_OK, resultIntent);
+                    
                 }
 
                 // Check if the InputImage is null
                 if (inputImage == null) { // InputImage is null
-                    Log.e("CameraX", "InputImage is null");
+                    Log.e(TAG, "InputImage is null");
                     return;
                 }
-
-//                // Process the image using ML Kit
-//                //   - Use the processImageWithMLKit() method to process the image
-//                //   - Use the TextRecognitionCallback to handle the recognized text
-//                processImageWithMLKit(inputImage, new TextRecognitionCallback() {
-//                    @Override
-//                    public void onTextRecognized(String recognizedText) {
-//
-//                        // Handle the recognized text here
-//                        Log.d(TAG, "Extracted Text: " + recognizedText);
-//
-//                        // Create an Intent to hold the result
-//                        Intent resultIntent = new Intent();
-//
-//                        // Put the recognized text into the Intent
-//                        resultIntent.putExtra("recognizedText", recognizedText);
-//
-//                        // Set the result of the activity
-//                        setResult(RESULT_OK, resultIntent);
-//
-//                        // Finish the activity and return to the calling activity
-//                        finish();
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//
-//                        // Handle errors here
-//                        Log.e(TAG, "Error recognizing text", e);
-//
-//                    }
-//                });
 
                 // Unbind the cameraProvider and close the ImageProxy
                 if (cameraProvider != null) { // cameraProvider is not null
