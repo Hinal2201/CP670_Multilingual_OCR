@@ -10,11 +10,11 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -29,19 +29,18 @@ import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.IOException;
 import java.util.Objects;
-import java.util.concurrent.ExecutionException;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
-
 public class OCR extends MainActivity {
     private static final String TAG = "OCR";
     private static final int PICK_IMAGE_REQUEST = 2;
 
     private Uri imageUri = null;
+    ProgressBar progressBar = null;
 
     /*
      * Declare the ActivityResultLauncher
@@ -50,6 +49,7 @@ public class OCR extends MainActivity {
     private final ActivityResultLauncher<Intent> cameraXActivityResultLauncher = registerForActivityResult(
         new ActivityResultContracts.StartActivityForResult(),
         result -> {
+            progressBar.setVisibility(View.GONE);
             onReceiveCameraXCallback(result.getResultCode(), result.getData());
         }
     );
@@ -59,10 +59,12 @@ public class OCR extends MainActivity {
      * This launcher will be used to select an image from the gallery
      */
     private final ActivityResultLauncher<String> selectImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        progressBar.setVisibility(View.GONE);
+
         if (uri != null) {
             // TODO: Use MLKit or other OCR library to process the selected image
             Log.d(TAG, "Image selected: " + uri);
-        
+
             imageUri = uri;
             updateImageView(imageUri);
 
@@ -85,6 +87,8 @@ public class OCR extends MainActivity {
             return insets;
         });
 
+        progressBar = findViewById(R.id.progressBar);
+
         // Lookup the string resource
         String ocrPageTitle = getString(R.string.ocr_page_title);
 
@@ -103,13 +107,17 @@ public class OCR extends MainActivity {
         // Set up the Take Picture button onClickListener
         Button btnTakePicture = findViewById(R.id.btnOcrTakePicture);
         btnTakePicture.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
             Intent intent_ocr = new Intent(this, CameraXActivity.class);
             cameraXActivityResultLauncher.launch(intent_ocr); // callback onReceiveCameraXCallback will be trigger once finished
         });
 
         // Set up the From Gallery button onClickListener
         Button btnFromGallery = findViewById(R.id.btnOcrFromGallery);
-        btnFromGallery.setOnClickListener(v -> selectImageLauncher.launch("image/*"));
+        btnFromGallery.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            selectImageLauncher.launch("image/*");
+        });
 
         LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
         textRecognitionContainer.setVisibility(View.GONE);
@@ -118,7 +126,10 @@ public class OCR extends MainActivity {
         multilineEditTextContainer.setVisibility(View.GONE);
 
         Button btnTextRecognition = findViewById(R.id.btnTextRecognition);
-        btnTextRecognition.setOnClickListener(v -> onTextRecognitionButtonClicked(v));
+        btnTextRecognition.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            onTextRecognitionButtonClicked(v);
+        });
     }
 
     @Override
@@ -143,6 +154,7 @@ public class OCR extends MainActivity {
      * Method to handle the result from cameraXActivityResultLauncher
      */
     private void onReceiveCameraXCallback(int resultCode, Intent data) {
+
         if (resultCode == RESULT_OK && data != null) {
             // Get imageUri from data intent
             String imageUriString = data.getStringExtra("imageUri");
@@ -167,7 +179,6 @@ public class OCR extends MainActivity {
      */
     private void onTextRecognitionButtonClicked(View v) {
         Log.d(TAG, "Text Recognition button clicked");
-
         // Get imageUri from imagePlaceholder
         ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
         processImageUri(imageUri);
@@ -195,6 +206,8 @@ public class OCR extends MainActivity {
                     // Handle the recognized text here
                     Log.d("MLKit", "Extracted Text: " + recognizedText);
 
+                    progressBar.setVisibility(View.GONE);
+
                     // Check if length of recognizedText > 0
                     if (recognizedText.isEmpty()) {
                         Log.e("TAG", "Extracted Text is empty");
@@ -216,10 +229,12 @@ public class OCR extends MainActivity {
                 public void onError(Exception e) {
                     // Handle errors here
                     Log.e("MLKit", "onError: ", e);
+                    progressBar.setVisibility(View.GONE);
                 }
             });
             
         } catch (IOException e) {
+            progressBar.setVisibility(View.GONE);
             throw new RuntimeException(e);
         }
 
