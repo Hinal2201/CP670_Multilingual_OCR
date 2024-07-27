@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "inside onCreate");
 
         super.onCreate(savedInstanceState);
+        // Ensure locale is updated
+        LocaleHelper.setLocale(this, LocaleHelper.getLanguage(this));
 
         EdgeToEdge.enable(this);
         setContentView(getLayoutResource());
