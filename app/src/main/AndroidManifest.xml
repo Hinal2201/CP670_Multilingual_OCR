@@ -43,6 +43,9 @@
             android:name=".OCR"
             android:exported="false" />
         <activity
+            android:name=".CameraXActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

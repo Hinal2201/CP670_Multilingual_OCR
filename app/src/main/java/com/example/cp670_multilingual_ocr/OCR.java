@@ -1,283 +1,330 @@
 package com.example.cp670_multilingual_ocr;
 
-import android.Manifest;
-
 import android.content.ContentValues;
 import android.content.Intent;
-
-import android.content.pm.PackageManager;
-import android.media.Image;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.net.Uri;
 import android.provider.MediaStore;
-import android.view.SurfaceView;
-import android.widget.Button;
 import android.util.Log;
-import android.annotation.SuppressLint;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.CameraSelector;
+import androidx.appcompat.widget.Toolbar;
 import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCapture.OutputFileOptions;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.result.ActivityResultLauncher;
 
-import com.google.common.util.concurrent.ListenableFuture;
-
 import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 
-
 public class OCR extends MainActivity {
     private static final String TAG = "OCR";
-
-    private SurfaceView cameraPreview;
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    private ImageCapture imageCapture = null;
     private static final int PICK_IMAGE_REQUEST = 2;
-    private ProcessCameraProvider cameraProvider; // Declare cameraProvider at the class level
 
-    // Define an ActivityResultLauncher for selecting an image from the gallery at the class level
+    private Uri imageUri = null;
+    ProgressBar progressBar = null;
+
+    /*
+     * Declare the ActivityResultLauncher
+     * Remarks: can move this private class attributes orcActivityResultLauncher to other activity class
+     */
+    private final ActivityResultLauncher<Intent> cameraXActivityResultLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            progressBar.setVisibility(View.GONE);
+            onReceiveCameraXCallback(result.getResultCode(), result.getData());
+        }
+    );
+
+    /*  
+     * Define an ActivityResultLauncher for selecting an image from the gallery at the class level
+     * This launcher will be used to select an image from the gallery
+     */
     private final ActivityResultLauncher<String> selectImageLauncher = registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        progressBar.setVisibility(View.GONE);
+
         if (uri != null) {
             // TODO: Use MLKit or other OCR library to process the selected image
-            Log.d("OCR", "Image selected: " + uri);
-        
-            processImageUri(uri);
+            Log.d(TAG, "Image selected: " + uri);
+
+            imageUri = uri;
+            updateImageView(imageUri);
+
+        }
+        else {
+            Log.e(TAG, "No image selected");
+
         }
     });
 
-    // Handle camera permissions request
-    private final ActivityResultLauncher<String> requestCameraPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-        if (isGranted) {
-            initializeCamera();
-        } else {
-            // Handle permission denial
-            Log.e("OCR", "Camera permission is required.");
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.i(TAG, "inside onCreate");
+
+        EdgeToEdge.enable(this);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        progressBar = findViewById(R.id.progressBar);
+
+        // Lookup the string resource
+        String ocrPageTitle = getString(R.string.ocr_page_title);
+
+        // Set the toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(ocrPageTitle);
         }
-    });
 
-    private void initializeCamera() {
+        // get Uri of res/drawable/image_placeholder.png
+        imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.image_placeholder);
+        updateImageView(imageUri);
 
-        final PreviewView previewView = findViewById(R.id.camera_preview);
+        // Set up the Take Picture button onClickListener
+        Button btnTakePicture = findViewById(R.id.btnOcrTakePicture);
+        btnTakePicture.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            Intent intent_ocr = new Intent(this, CameraXActivity.class);
+            cameraXActivityResultLauncher.launch(intent_ocr); // callback onReceiveCameraXCallback will be trigger once finished
+        });
 
-        // Request camera permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-            return;
-        }
+        // Set up the From Gallery button onClickListener
+        Button btnFromGallery = findViewById(R.id.btnOcrFromGallery);
+        btnFromGallery.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            selectImageLauncher.launch("image/*");
+        });
 
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
-        cameraProviderFuture.addListener(() -> {
-            try {
-                // Used to bind the lifecycle of cameras to the lifecycle owner
-                cameraProvider = cameraProviderFuture.get();
-    
-                // Preview
-                Preview preview = new Preview.Builder().build();
-                CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+        LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
+        textRecognitionContainer.setVisibility(View.GONE);
 
-                // Initialize ImageCapture
-                imageCapture = new ImageCapture.Builder().build();
+        LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
+        multilineEditTextContainer.setVisibility(View.GONE);
 
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll();
-    
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
-
-            } catch (ExecutionException | InterruptedException e) {
-                // Handle any errors (including cancellation)
-                Log.e("CameraX", "Use case binding failed", e);
-            }
-        }, ContextCompat.getMainExecutor(this));
-
-    }
-
-    private void capturePhoto() {
-        if (imageCapture == null) return;
-
-        // Capture image and process it
-        imageCapture.takePicture(ContextCompat.getMainExecutor(this), new ImageCapture.OnImageCapturedCallback() {
-
-            @Override
-            public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
-                Log.d("OCR", "Image called back");
-                InputImage inputImage = null;
-                Image mediaImage = imageProxy.getImage();
-                if (mediaImage != null) {
-                    // Create an InputImage instance from the Image object
-                    inputImage = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-                }
-
-                if (inputImage == null) {
-                    Log.e("OCR", "InputImage is null");
-                    return;
-                }
-
-                processImageWithMLKit(inputImage, new TextRecognitionCallback() {
-                    @Override
-                    public void onTextRecognized(String recognizedText) {
-                        // Handle the recognized text here
-                        Log.d("OCR", "Extracted Text: " + recognizedText);
-
-                        // Create an Intent to hold the result
-                        Intent resultIntent = new Intent();
-                        // Put the recognized text into the Intent
-                        resultIntent.putExtra("recognizedText", recognizedText);
-                        // Set the result of the activity
-                        setResult(RESULT_OK, resultIntent);
-                        // Finish the activity and return to the calling activity
-                        finish();
-                    }
-                
-                    @Override
-                    public void onError(Exception e) {
-                        // Handle errors here
-                        Log.e("OCR", "Error recognizing text", e);
-                    }
-                });
-
-                if (cameraProvider != null) {
-                    cameraProvider.unbindAll();
-                }
-                imageProxy.close(); // close the ImageProxy to free up resources
-
-                // Return to the previous activity
-                finish();
-            }
-
-            @Override
-            public void onError(@NonNull ImageCaptureException exception) {
-                Log.e("OCR", "Image capture failed: " + exception.getMessage(), exception);
-            }
-            
+        Button btnTextRecognition = findViewById(R.id.btnTextRecognition);
+        btnTextRecognition.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            onTextRecognitionButtonClicked(v);
         });
     }
 
-    private @NonNull OutputFileOptions getOutputFileOptions(String timeStamp) {
+    @Override
+    public int getLayoutResource() {
+        return R.layout.activity_ocr;
+    }
+
+    // /*
+    //  * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
+    //  */
+    // @Override
+    // protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    //     super.onActivityResult(requestCode, resultCode, data);
+
+    //     // Check if the result comes from the OCR activity
+    //     if (requestCode == OCR_REQUEST_CODE) {
+    //         onReceiveOcrCallback(resultCode, data);
+    //     }
+    // }
+
+    /*
+     * Method to handle the result from cameraXActivityResultLauncher
+     */
+    private void onReceiveCameraXCallback(int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK && data != null) {
+            // Get imageUri from data intent
+            String imageUriString = data.getStringExtra("imageUri");
+            Log.d(TAG, "Image URI received: " + imageUriString);
+
+            imageUri = Uri.parse(imageUriString);
+            Log.d(TAG, "Image URI parsed: " + imageUri);
+
+            if (imageUri != null) {
+                Log.d(TAG, "ImageUri received from CameraXActivity");
+                updateImageView(imageUri);
+            } else {
+                Log.e(TAG, "No image received from CameraXActivity");
+            }
+        } else {
+            Log.d(TAG, "Error in CameraXActivity");
+        }
+    }
+
+    /*
+     * onTextRecognitionButtonClicked is called when the user clicks the Text Recognition button
+     */
+    private void onTextRecognitionButtonClicked(View v) {
+        Log.d(TAG, "Text Recognition button clicked");
+        // Get imageUri from imagePlaceholder
+        ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
+        processImageUri(imageUri);
+    }
+
+    /*
+     * Process the image URI which is selected from the gallery
+     */
+    private void processImageUri(Uri uri) {
+
+        Log.d(TAG, "Processing image: " + uri);
+
+        try {
+
+            // read image from uri
+            InputImage image = InputImage.fromFilePath(this, uri);
+
+            // Process the image using ML Kit
+            //   - Use the processImageWithMLKit() method to process the image
+            //   - Use the TextRecognitionCallback to handle the recognized text
+            processImageWithMLKit(image, new TextRecognitionCallback() {
+                @Override
+                public void onTextRecognized(String recognizedText) {
+
+                    // Handle the recognized text here
+                    Log.d("MLKit", "Extracted Text: " + recognizedText);
+
+                    progressBar.setVisibility(View.GONE);
+
+                    // Check if length of recognizedText > 0
+                    if (recognizedText.isEmpty()) {
+                        Log.e("TAG", "Extracted Text is empty");
+                        // Create a toast message to inform the user that no text was recognized
+                        Toast.makeText(OCR.this, "No text was recognized", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    Log.d(TAG, "Extracted Text: " + recognizedText);
+
+                    // set extracted text to ocrNoteDetailEditText
+                    Log.d(TAG, "Setting extracted text to ocrNoteDetailEditText");
+                    EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
+                    ocrNoteDetailEditText.setText(recognizedText);
+
+                }
+            
+                @Override
+                public void onError(Exception e) {
+                    // Handle errors here
+                    Log.e("MLKit", "onError: ", e);
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+            
+        } catch (IOException e) {
+            progressBar.setVisibility(View.GONE);
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /*
+     * Process the image using ML Kit
+     */
+    private void processImageWithMLKit(InputImage image, TextRecognitionCallback callback) {
+
+        // Create a TextRecognizer instance
+        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
+
+        // Process the image using the TextRecognizer
+        // TODO: how to set progress bar?
+        recognizer.process(image)
+            .addOnSuccessListener(text -> {
+                // Process recognized text
+                String recognizedText = text.getText();
+                Log.d(TAG, "Recognized Text: " + recognizedText);
+                callback.onTextRecognized(recognizedText); // Use the callback to return the text
+            })
+            .addOnFailureListener(e -> {
+                // Handle failure
+                Log.e(TAG, "Text recognition failed", e);
+                callback.onError(e); // Use the callback to return the error
+            });
+    }
+
+    /*
+     * Callback interface for handling MLKit text recognition
+     */
+    private @NonNull ImageCapture.OutputFileOptions getOutputFileOptions(String timeStamp) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "JPEG_" + timeStamp + "_");
         contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
         contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
 
-        return new OutputFileOptions.Builder(
+        return new ImageCapture.OutputFileOptions.Builder(
                 getContentResolver(),
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 contentValues
         ).build();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG, "inside onCreate");
+    /*
+     * Resize the image view based on the aspect ratio of the image
+     */
+    private void updateImageView(Uri uri) {
+        Log.d(TAG, "Updating image view");
 
-        super.onCreate(savedInstanceState);
+        ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
+        Log.d(TAG, "Image placeholder: " + imagePlaceholder);
 
-        PreviewView cameraPreview = findViewById(R.id.camera_preview);
-        Button captureButton = findViewById(R.id.capture_button);
+        Bitmap bitmap = null;
 
-        // Check for camera permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            // ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA);
-        } else {
-            initializeCamera();
-        }
-        captureButton.setOnClickListener(v -> capturePhoto());
-
-        Button selectImageButton = findViewById(R.id.select_image_button);
-        selectImageButton.setOnClickListener(v -> selectImageLauncher.launch("image/*"));
-
-    }
-
-    @Override
-        protected int getLayoutResource() {
-        return R.layout.activity_ocr;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initializeCamera();
-            }
-            else {
-                // Handle permission denial
-                Log.e("OCR", "Camera permission was denied.");
-            }
-        }
-    }
-
-    private void processImageUri(Uri uri) {
-        // Your code to process the image URI, e.g., using ML Kit for OCR
-        Log.d("OCR", "Processing image: " + uri);
+        // Extract bitmap from the image URI
         try {
-
-            // read image from uri
-            InputImage image = InputImage.fromFilePath(this, uri);
-            processImageWithMLKit(image, new TextRecognitionCallback() {
-                @Override
-                public void onTextRecognized(String recognizedText) {
-                    // Handle the recognized text here
-                    Log.d("OCR", "Extracted Text: " + recognizedText);
-
-                    // Create an Intent to hold the result
-                    Intent resultIntent = new Intent();
-                    // Put the recognized text into the Intent
-                    resultIntent.putExtra("recognizedText", recognizedText);
-                    // Set the result of the activity
-                    setResult(RESULT_OK, resultIntent);
-                    // Finish the activity and return to the calling activity
-                    finish();
-                }
-            
-                @Override
-                public void onError(Exception e) {
-                    // Handle errors here
-                    Log.e("OCR", "Error recognizing text", e);
-                }
-            });
-            
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+        } catch (Exception e) {
+            Log.e(TAG, Objects.requireNonNull(e.getMessage()));
         }
 
+        if (bitmap == null) {
+            Log.e(TAG, "Bitmap is null");
+            return;
+        }
+
+        // Log bitmap extracted
+        Log.d(TAG, "Bitmap extracted");
+
+        // Set the image view bitmap
+        Log.d(TAG, "Setting ImageView bitmap");
+        imagePlaceholder.setImageBitmap(bitmap);
+
+        // Set the image view scale type to adjust the bounds
+        imagePlaceholder.setAdjustViewBounds(true);
+
+        // Change btnOcrTakePicture button from primary button to outlined button
+        Button btnTakePicture = findViewById(R.id.btnOcrTakePicture);
+
+
+        // Set textRecognitionContainer layout visible
+        LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
+        textRecognitionContainer.setVisibility(View.VISIBLE);
+
+        LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
+        multilineEditTextContainer.setVisibility(View.VISIBLE);
+
     }
 
-    private void processImageWithMLKit(InputImage image, TextRecognitionCallback callback) {
 
-        TextRecognizer recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS);
-
-        recognizer.process(image)
-            .addOnSuccessListener(text -> {
-                // Process recognized text
-                String recognizedText = text.getText();
-                Log.d("OCR", "Recognized Text: " + recognizedText);
-                callback.onTextRecognized(recognizedText); // Use the callback to return the text
-            })
-            .addOnFailureListener(e -> {
-                // Handle failure
-                Log.e("OCR", "Text recognition failed", e);
-                callback.onError(e); // Use the callback to return the error
-            });
-    }
 }

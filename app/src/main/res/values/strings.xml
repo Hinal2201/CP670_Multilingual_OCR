@@ -118,4 +118,8 @@ The success of the books and films has allowed the Harry Potter franchise to exp
     <string name="capture">Capture</string>
     <string name="select_image">Select Image</string>
     <string name="notes_list">Notes List Page</string>
+    <string name="ocr_page_title">OCR</string>
+    <string name="ocr_note_title_hint">Please enter note title here</string>
+    <string name="button_label_takepicture">Take Picture</string>
+    <string name="button_label_fromgallery">From Gallery</string>
 </resources>
