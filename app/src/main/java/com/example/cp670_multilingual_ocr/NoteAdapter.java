@@ -27,7 +27,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             button.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
 
-                if (pos != RecyclerView.NO_POSITION){
+                if (pos != RecyclerView.NO_POSITION) {
                     listener.onItemClick(pos);
                 }
             });
@@ -66,8 +66,14 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
-    public void deleteItem(int position){
+
+    public void deleteItem(int position) {
         localDataSet.remove(position);
         notifyItemRemoved(position);
+    }
+
+    public void insertItem(String title) {
+        localDataSet.add(title);
+        notifyItemInserted(localDataSet.size());
     }
 }

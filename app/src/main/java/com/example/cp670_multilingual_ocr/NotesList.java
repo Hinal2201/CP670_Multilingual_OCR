@@ -1,5 +1,6 @@
 package com.example.cp670_multilingual_ocr;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -7,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +35,7 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
     private NoteAdapter noteAdapter;
     FrameLayout fl;
     private static final Integer LAUNCH_NOTE_DETAILS = 10;
+    private static final Integer LAUNCH_NOTE_ADD = 11;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,16 +65,21 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
 
         fl = findViewById(R.id.noteNote);
 
-        // -- fill out the recycler view:
+        // -- Fill out the recycler view:
 
         noteAdapter = new NoteAdapter(noteTitles, this);
         RecyclerView recyclerView = findViewById(R.id.recyclerNotes);
         recyclerView.setLayoutManager(new GridLayoutManager(this, calculateNoOfColumns(this, fl != null)));
         recyclerView.setAdapter(noteAdapter);
+
+        // -- Note add
+
+        Button noteAddBtn = findViewById(R.id.noteAdd);
+        noteAddBtn.setOnClickListener(v -> onNoteAddClick());
     }
 
     @Override
-    public int getLayoutResource(){
+    public int getLayoutResource() {
         return R.layout.activity_notes_list;
     }
 
@@ -80,7 +88,7 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
 
-        if(isMultiLayout){
+        if (isMultiLayout) {
             return 2;
         }
         return (int) (dpWidth / 180);
@@ -95,19 +103,38 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
             String id = data.getStringExtra("id");
             deleteNote(id, pos);
         }
+
+        if (requestCode == LAUNCH_NOTE_ADD && responseCode == RESULT_OK) {
+            String title = data.getStringExtra("title");
+            String note = data.getStringExtra("note");
+            addNote(title, note);
+        }
     }
 
     public void deleteNote(String id, Integer pos) {
         database.delete(NoteDatabaseHelper.TABLE_NAME, NoteDatabaseHelper.KEY_ID + "=?", new String[]{id});
 
         String removedNoteTitle = noteTitles.get(pos);
-        removedNoteTitle = removedNoteTitle.length() > 8 ? removedNoteTitle.substring(0,8) + "..." : removedNoteTitle;
+        removedNoteTitle = removedNoteTitle.length() > 8 ? removedNoteTitle.substring(0, 8) + "..." : removedNoteTitle;
         noteTitles.remove(pos);
 
         loadNotes(false);
         noteAdapter.deleteItem(pos);
         removeFragmentIfExists(R.id.noteNote);
         Snackbar snackbar = Snackbar.make(findViewById(R.id.main), "Note titled: " + removedNoteTitle + " deleted!", Snackbar.LENGTH_LONG);
+        snackbar.show();
+    }
+
+    public void addNote(String title, String note) {
+        ContentValues values = new ContentValues();
+        values.put(NoteDatabaseHelper.KEY_TITLE, title);
+        values.put(NoteDatabaseHelper.KEY_NOTE, note);
+        database.insert(NoteDatabaseHelper.TABLE_NAME, null, values);
+
+        loadNotes(false);
+        noteAdapter.insertItem(title);
+        removeFragmentIfExists(R.id.noteNote);
+        Snackbar snackbar = Snackbar.make(findViewById(R.id.main), "Note titled: " + title + " added", Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
@@ -123,6 +150,7 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
                 NoteDatabaseHelper.TABLE_NAME, null, null, null, null,
                 null, null);
         cursor.moveToFirst();
+
         int i = 0;
         while (!cursor.isAfterLast()) {
             int idIdx = cursor.getColumnIndex(NoteDatabaseHelper.KEY_ID);
@@ -142,6 +170,23 @@ public class NotesList extends MainActivity implements NoteAdapter.OnItemClickLi
 
             cursor.moveToNext();
             i++;
+        }
+    }
+
+    public void onNoteAddClick() {
+        if (fl != null) {
+            removeFragmentIfExists(R.id.noteNote);
+            NoteEditFragment frag = new NoteEditFragment(this);
+
+            FragmentTransaction ft =
+                    getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.noteNote, frag);
+
+            ft.commit();
+        } else {
+            Intent resultIntent = new Intent(NotesList.this, NoteDetails.class);
+            resultIntent.putExtra("pos", "null");
+            startActivityForResult(resultIntent, LAUNCH_NOTE_ADD);
         }
     }
 

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,7 +16,9 @@ import androidx.fragment.app.Fragment;
 public class NoteEditFragment extends Fragment {
     NotesList nl;
 
-    public NoteEditFragment(NotesList nl){ this.nl = nl;}
+    public NoteEditFragment(NotesList nl) {
+        this.nl = nl;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -28,34 +30,26 @@ public class NoteEditFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            String pos = getArguments().getString("pos");
-            String id = getArguments().getString("id");
-            String title = getArguments().getString("title");
-            String note = getArguments().getString("note");
+        // -- Populate frame logic:
 
-            // -- Populate frame logic:
+        EditText titleEdt = getView().findViewById(R.id.noteTitleEdit);
+        EditText noteEdt = getView().findViewById(R.id.noteNoteEdit);
 
-            TextView titleTxt = getView().findViewById(R.id.noteTitle);
-            titleTxt.setText(title);
-            TextView noteTxt = getView().findViewById(R.id.noteNote);
-            noteTxt.setText(String.format(note));
+        // -- Add button logic:
 
-            // -- Delete button logic:
-
-            Button deleteBtn = getView().findViewById(R.id.noteDelete);
-            deleteBtn.setOnClickListener(v -> {
-                if (nl == null) {
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("pos", pos);
-                    resultIntent.putExtra("id", id);
-                    getActivity().setResult(Activity.RESULT_OK, resultIntent);
-                    getActivity().finish();
-                } else {
-                    nl.deleteNote(id, Integer.valueOf(pos));
-                }
-            });
-        }
+        Button addBtn = getView().findViewById(R.id.noteFinalize);
+        addBtn.setOnClickListener(v -> {
+            String title = titleEdt.getText().toString();
+            String note = noteEdt.getText().toString();
+            if (nl == null) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("title", title);
+                resultIntent.putExtra("note", note);
+                getActivity().setResult(Activity.RESULT_OK, resultIntent);
+                getActivity().finish();
+            } else {
+                nl.addNote(title, note);
+            }
+        });
     }
 }

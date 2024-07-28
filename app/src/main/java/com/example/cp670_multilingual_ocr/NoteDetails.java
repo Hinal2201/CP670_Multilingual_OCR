@@ -25,30 +25,42 @@ public class NoteDetails extends MainActivity {
             return insets;
         });
 
-
         // -- Load frame logic:
 
         String pos = getIntent().getStringExtra("pos");
-        String id = getIntent().getStringExtra("id");
-        String title = getIntent().getStringExtra("title");
-        String note = getIntent().getStringExtra("note");
 
-        Bundle bundle = new Bundle();
-        bundle.putString("pos", pos);
-        bundle.putString("id", id);
-        bundle.putString("title", title);
-        bundle.putString("note", note);
+        // -- If note details fragment is being loaded
 
-        NoteFragment frag = new NoteFragment(null);
-        frag.setArguments(bundle);
+        if (!pos.equals("null")) {
+            String id = getIntent().getStringExtra("id");
+            String title = getIntent().getStringExtra("title");
+            String note = getIntent().getStringExtra("note");
 
-        FragmentTransaction ft =
-                getSupportFragmentManager().beginTransaction();
+            Bundle bundle = new Bundle();
+            bundle.putString("pos", pos);
+            bundle.putString("id", id);
+            bundle.putString("title", title);
+            bundle.putString("note", note);
 
-        ft.add(R.id.noteNoteInNewWindow, frag);
-        ft.commit();
+            NoteFragment frag = new NoteFragment(null);
+            frag.setArguments(bundle);
+            FragmentTransaction ft =
+                    getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.noteNoteInNewWindow, frag);
+            ft.commit();
+        }
+
+        // -- Else if note adding fragment is being loaded
+
+        else {
+            NoteEditFragment frag = new NoteEditFragment(null);
+            FragmentTransaction ft =
+                    getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.noteNoteInNewWindow, frag);
+            ft.commit();
+        }
     }
-
+    
     @Override
     public int getLayoutResource() {
         return R.layout.activity_note_details;

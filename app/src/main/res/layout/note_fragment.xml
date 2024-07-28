@@ -13,18 +13,17 @@
         android:layout_marginTop="9dp"
         android:layout_marginStart="9dp"
         android:layout_marginEnd="9dp"
-        android:layout_marginBottom="20dp"
         android:gravity="center"
         android:text="@string/note_title"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        />
+        android:textSize="40sp"
+        android:textStyle="bold" />
 
     <ScrollView
-        android:id="@+id/notesListScroll"
+        android:id="@+id/noteDetailsScroll"
         android:background="@color/note_bg"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:layout_margin="15dp"
         android:layout_below="@+id/noteTitle"
         android:layout_above="@+id/noteDelete">
 
@@ -32,12 +31,9 @@
             android:id="@+id/noteNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:layout_marginTop="-35dp"
             android:gravity="start"
             android:text="@string/note_note"
-            android:textSize="20sp"
-            />
+            android:textSize="20sp" />
     </ScrollView>
 
     <Button
