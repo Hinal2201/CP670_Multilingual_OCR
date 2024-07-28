@@ -20,16 +20,16 @@
         4. Consulte esta sección de Ayuda para obtener ayuda.
     </string>
 
+    <string name="notes_list">Página de lista de notas</string>
     <string name="note_title">título</string>
     <string name="note_note">nota</string>
     <string name="delete_btn_text">Borrar</string>
     <string name="add_btn_text">Añadir Nota</string>
 
-    <string name="capture">Capture</string>
-    <string name="select_image">Select Image</string>
-    <string name="notes_list">Página de lista de notas</string>
     <string name="ocr_page_title">OCR</string>
-    <string name="ocr_note_title_hint">Please enter note title here</string>
-    <string name="button_label_takepicture">Take Picture</string>
-    <string name="button_label_fromgallery">From Gallery</string>
+    <string name="select_image">Seleccione Imagen</string>
+    <string name="ocr_note_title_hint">Por favor ingrese el título de la nota</string>
+    <string name="button_label_takepicture">Tomar Foto</string>
+    <string name="button_label_fromgallery">De Galería</string>
+    <string name="capture">Capturar</string>
 </resources>

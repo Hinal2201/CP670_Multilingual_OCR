@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -21,7 +20,6 @@ public class Settings extends MainActivity {
         Log.i(TAG, "inside onCreate");
 
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -48,7 +46,7 @@ public class Settings extends MainActivity {
 
                     if (selectedLanguage.equals("English")) {
                         LocaleHelper.setLocale(Settings.this, "en");
-                    } else if (selectedLanguage.equals("Español")) {
+                    } else {
                         LocaleHelper.setLocale(Settings.this, "es");
                     }
 
