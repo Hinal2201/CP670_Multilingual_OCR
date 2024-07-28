@@ -21,7 +21,6 @@ public class Settings extends MainActivity {
         Log.i(TAG, "inside onCreate");
 
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
 
         EdgeToEdge.enable(this);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

@@ -110,16 +110,17 @@ The success of the books and films has allowed the Harry Potter franchise to exp
         <item>note 19</item>
         <item>note 20</item>
     </string-array>
+
+    <string name="notes_list">Notes List Page</string>
     <string name="note_title">title</string>
     <string name="note_note">note</string>
     <string name="delete_btn_text">Delete</string>
     <string name="add_btn_text">Add Note</string>
 
-    <string name="capture">Capture</string>
-    <string name="select_image">Select Image</string>
-    <string name="notes_list">Notes List Page</string>
     <string name="ocr_page_title">OCR</string>
+    <string name="select_image">Select Image</string>
     <string name="ocr_note_title_hint">Please enter note title here</string>
     <string name="button_label_takepicture">Take Picture</string>
     <string name="button_label_fromgallery">From Gallery</string>
+    <string name="capture">Capture</string>
 </resources>
