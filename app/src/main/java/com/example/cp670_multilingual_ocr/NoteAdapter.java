@@ -4,7 +4,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,17 +14,17 @@ import java.util.ArrayList;
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     private static final String TAG = "NoteAdapter";
 
-    private ArrayList<String> localDataSet;
+    private final ArrayList<String> localDataSet;
     private final OnItemClickListener listener;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView textView;
+        private final Button button;
 
         public ViewHolder(View view, OnItemClickListener listener) {
             super(view);
 
-            textView = view.findViewById(R.id.noteTitleRecycler);
-            textView.setOnClickListener(v -> {
+            button = view.findViewById(R.id.noteTitleRecycler);
+            button.setOnClickListener(v -> {
                 int pos = getAdapterPosition();
 
                 if (pos != RecyclerView.NO_POSITION){
@@ -33,8 +33,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             });
         }
 
-        public TextView getTextView() {
-            return textView;
+        public Button getButton() {
+            return button;
         }
     }
 
@@ -55,7 +55,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(NoteAdapter.ViewHolder viewHolder, final int position) {
-        viewHolder.getTextView().setText(localDataSet.get(position));
+        viewHolder.getButton().setText(localDataSet.get(position));
     }
 
     @Override
