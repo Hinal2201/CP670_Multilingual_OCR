@@ -2,6 +2,7 @@ package com.example.cp670_multilingual_ocr;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,6 +31,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import java.io.IOException;
 import java.util.Objects;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -38,6 +40,7 @@ import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
 public class OCR extends MainActivity {
     private static final String TAG = "OCR";
     private static final int PICK_IMAGE_REQUEST = 2;
+    private SQLiteDatabase database;
 
     private Uri imageUri = null;
     ProgressBar progressBar = null;
@@ -130,25 +133,27 @@ public class OCR extends MainActivity {
             progressBar.setVisibility(View.VISIBLE);
             onTextRecognitionButtonClicked(v);
         });
+
+        LinearLayout btnAddNoteContainer = findViewById(R.id.btnAddNoteContainer);
+        btnAddNoteContainer.setVisibility(View.GONE);
+
+        Button btnAddNote = findViewById(R.id.btnAddNote);
+        btnAddNote.setOnClickListener(v -> {
+            EditText ocrNoteTitleEditText = findViewById(R.id.ocrNoteTitleEditText);
+            EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
+            String title = ocrNoteTitleEditText.getText().toString();
+            String note = ocrNoteDetailEditText.getText().toString();
+            addNote(title, note);
+        });
+
+        NoteDatabaseHelper dbHelper = new NoteDatabaseHelper(this);
+        database = dbHelper.getWritableDatabase();
     }
 
     @Override
     public int getLayoutResource() {
         return R.layout.activity_ocr;
     }
-
-    // /*
-    //  * Remarks: onActivityResult can be clone in other activity class if calling OCR activity
-    //  */
-    // @Override
-    // protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    //     super.onActivityResult(requestCode, resultCode, data);
-
-    //     // Check if the result comes from the OCR activity
-    //     if (requestCode == OCR_REQUEST_CODE) {
-    //         onReceiveOcrCallback(resultCode, data);
-    //     }
-    // }
 
     /*
      * Method to handle the result from cameraXActivityResultLauncher
@@ -324,6 +329,58 @@ public class OCR extends MainActivity {
         LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
         multilineEditTextContainer.setVisibility(View.VISIBLE);
 
+        LinearLayout btnAddNoteContainer = findViewById(R.id.btnAddNoteContainer);
+        btnAddNoteContainer.setVisibility(View.VISIBLE);
+
+    }
+
+    public void addNote(String title, String note) {
+
+        if (title.isEmpty()) {
+            Toast toast = Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        if (note.isEmpty()) {
+            Toast toast = Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(NoteDatabaseHelper.KEY_TITLE, title);
+        values.put(NoteDatabaseHelper.KEY_NOTE, note);
+        long result = database.insert(NoteDatabaseHelper.TABLE_NAME, null, values);
+        if (result > 0) {
+            Log.i(TAG, "Note titled: " + title + " added");
+            Toast toast = Toast.makeText(this, "Note titled: " + title + " added", Toast.LENGTH_SHORT);
+            toast.show();
+
+            // Clear title, imagePlaceholder, and textRecognitionContainer
+            EditText ocrNoteTitleEditText = findViewById(R.id.ocrNoteTitleEditText);
+            ocrNoteTitleEditText.setText("");
+
+            ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
+            imagePlaceholder.setImageResource(R.drawable.image_placeholder);
+
+            EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
+            ocrNoteDetailEditText.setText("");
+
+            LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
+            textRecognitionContainer.setVisibility(View.GONE);
+
+            LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
+            multilineEditTextContainer.setVisibility(View.GONE);
+
+            LinearLayout btnAddNoteContainer = findViewById(R.id.btnAddNoteContainer);
+            btnAddNoteContainer.setVisibility(View.GONE);
+
+        } else {
+            Log.i(TAG, "Note titled: " + title + " failed to add");
+            Toast toast = Toast.makeText(this, "Note titled: " + title + " failed to add", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
 
