@@ -217,7 +217,7 @@ public class OCR extends MainActivity {
                     if (recognizedText.isEmpty()) {
                         Log.e("TAG", "Extracted Text is empty");
                         // Create a toast message to inform the user that no text was recognized
-                        Toast.makeText(OCR.this, "No text was recognized", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OCR.this, getString(R.string.toast_no_text_extracted), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -337,13 +337,13 @@ public class OCR extends MainActivity {
     public void addNote(String title, String note) {
 
         if (title.isEmpty()) {
-            Toast toast = Toast.makeText(this, "Title cannot be empty", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(R.string.toast_title_cannot_be_empty), Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
 
         if (note.isEmpty()) {
-            Toast toast = Toast.makeText(this, "Note cannot be empty", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(R.string.toast_note_detail_cannot_be_empty), Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -354,7 +354,7 @@ public class OCR extends MainActivity {
         long result = database.insert(NoteDatabaseHelper.TABLE_NAME, null, values);
         if (result > 0) {
             Log.i(TAG, "Note titled: " + title + " added");
-            Toast toast = Toast.makeText(this, "Note titled: " + title + " added", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(R.string.word_note) + " " + title + " " + getString(R.string.word_added), Toast.LENGTH_SHORT);
             toast.show();
 
             // Clear title, imagePlaceholder, and textRecognitionContainer
@@ -378,7 +378,7 @@ public class OCR extends MainActivity {
 
         } else {
             Log.i(TAG, "Note titled: " + title + " failed to add");
-            Toast toast = Toast.makeText(this, "Note titled: " + title + " failed to add", Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(this, getString(R.string.word_note) + " " + title + " " + getString(R.string.word_failed_to_add), Toast.LENGTH_SHORT);
             toast.show();
         }
     }

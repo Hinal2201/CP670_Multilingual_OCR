@@ -32,4 +32,10 @@
     <string name="button_label_takepicture">Tomar Foto</string>
     <string name="button_label_fromgallery">De Galería</string>
     <string name="capture">Capturar</string>
+    <string name="button_label_textrecognition">Reconocimiento de texto</string>
+    <string name="toast_no_text_extracted">No se extrajo ningún texto de la imagen</string>
+    <string name="toast_title_cannot_be_empty">El título no puede estar vacío</string>
+    <string name="word_note">Nota</string>
+    <string name="word_added">agregada</string>
+    <string name="word_failed_to_add">no se pudo agregar</string>
 </resources>

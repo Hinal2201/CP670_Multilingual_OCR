@@ -105,7 +105,7 @@
                         style="?attr/materialButtonOutlinedStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Text Recognition" />
+                        android:text="@string/button_label_textrecognition" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -145,7 +145,7 @@
                         style="@style/Widget.Material3.Button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Add Note" />
+                        android:text="@string/add_btn_text" />
                 </LinearLayout>
 
                 
