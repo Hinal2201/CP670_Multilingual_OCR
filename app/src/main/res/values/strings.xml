@@ -123,4 +123,11 @@ The success of the books and films has allowed the Harry Potter franchise to exp
     <string name="button_label_takepicture">Take Picture</string>
     <string name="button_label_fromgallery">From Gallery</string>
     <string name="capture">Capture</string>
+    <string name="button_label_textrecognition">Text Recognition</string>
+    <string name="toast_no_text_extracted">No text extracted from image</string>
+    <string name="toast_title_cannot_be_empty">Title cannot be empty</string>
+    <string name="toast_note_detail_cannot_be_empty">Note detail cannot be empty</string>
+    <string name="word_note">Note</string>
+    <string name="word_added">added</string>
+    <string name="word_failed_to_add">failed to add</string>
 </resources>
