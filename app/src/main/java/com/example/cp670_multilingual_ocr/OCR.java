@@ -451,14 +451,14 @@ public class OCR extends MainActivity {
     /*
      * Setter of save_confirmed
      */
-    private void setSaveConfirmed(boolean save_confirmed) {
+    public void setSaveConfirmed(boolean save_confirmed) {
         this.save_confirmed = save_confirmed;
     }
 
     /*
      * Getter of save_confirmed
      */
-    private boolean getSaveConfirmed() {
+    public boolean getSaveConfirmed() {
         return this.save_confirmed;
     }
 }
