@@ -38,4 +38,8 @@
     <string name="word_note">Nota</string>
     <string name="word_added">agregada</string>
     <string name="word_failed_to_add">no se pudo agregar</string>
+    <string name="dialogtitle_confirm_save">Confirmar Guardar Nota</string>
+    <string name="dialogmessage_confirm_save">Quieres guardar esta nota?</string>
+    <string name="button_label_confirm">Confirmar</string>
+    <string name="button_label_cancel">Cancelar</string>
 </resources>

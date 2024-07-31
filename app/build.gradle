@@ -36,19 +36,22 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.recyclerview
-    testImplementation libs.junit
-    androidTestImplementation libs.ext.junit
-    androidTestImplementation libs.espresso.core
-
     implementation libs.camera.core
     implementation libs.camera.camera2
     implementation libs.camera.lifecycle
     implementation libs.camera.view
+    implementation libs.camera.extensions
     implementation libs.activity.ktx
     implementation libs.fragment.ktx
     implementation libs.appcompat.v141
+    implementation libs.text.recognition.v1600
 
-    implementation 'com.google.mlkit:text-recognition:16.0.0'
-
+    testImplementation libs.junit
+    androidTestImplementation libs.core
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+    androidTestImplementation libs.runner
+    
 }
+
 

@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
 import androidx.camera.core.ImageCapture;
 import androidx.core.graphics.Insets;
@@ -42,6 +44,8 @@ public class OCR extends MainActivity {
     private static final int PICK_IMAGE_REQUEST = 2;
     private SQLiteDatabase database;
 
+    private boolean save_confirmed = false;
+
     private Uri imageUri = null;
     ProgressBar progressBar = null;
 
@@ -57,7 +61,7 @@ public class OCR extends MainActivity {
         }
     );
 
-    /*  
+    /*
      * Define an ActivityResultLauncher for selecting an image from the gallery at the class level
      * This launcher will be used to select an image from the gallery
      */
@@ -143,7 +147,23 @@ public class OCR extends MainActivity {
             EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
             String title = ocrNoteTitleEditText.getText().toString();
             String note = ocrNoteDetailEditText.getText().toString();
-            addNote(title, note);
+
+            // Check if title are empty
+            if (title.isEmpty()) {
+                Toast toast = Toast.makeText(this, getString(R.string.toast_title_cannot_be_empty), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+
+            // Check if note are empty
+            if (note.isEmpty()) {
+                Toast toast = Toast.makeText(this, getString(R.string.toast_note_detail_cannot_be_empty), Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+
+            // Confirm save
+            showConfirmSaveDialog();
         });
 
         NoteDatabaseHelper dbHelper = new NoteDatabaseHelper(this);
@@ -190,6 +210,22 @@ public class OCR extends MainActivity {
     }
 
     /*
+     * Callback interface for handling MLKit text recognition
+     */
+    private @NonNull ImageCapture.OutputFileOptions getOutputFileOptions(String timeStamp) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "JPEG_" + timeStamp + "_");
+        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
+        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
+
+        return new ImageCapture.OutputFileOptions.Builder(
+                getContentResolver(),
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                contentValues
+        ).build();
+    }
+
+    /*
      * Process the image URI which is selected from the gallery
      */
     private void processImageUri(Uri uri) {
@@ -229,7 +265,7 @@ public class OCR extends MainActivity {
                     ocrNoteDetailEditText.setText(recognizedText);
 
                 }
-            
+
                 @Override
                 public void onError(Exception e) {
                     // Handle errors here
@@ -237,7 +273,7 @@ public class OCR extends MainActivity {
                     progressBar.setVisibility(View.GONE);
                 }
             });
-            
+
         } catch (IOException e) {
             progressBar.setVisibility(View.GONE);
             throw new RuntimeException(e);
@@ -267,22 +303,6 @@ public class OCR extends MainActivity {
                 Log.e(TAG, "Text recognition failed", e);
                 callback.onError(e); // Use the callback to return the error
             });
-    }
-
-    /*
-     * Callback interface for handling MLKit text recognition
-     */
-    private @NonNull ImageCapture.OutputFileOptions getOutputFileOptions(String timeStamp) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, "JPEG_" + timeStamp + "_");
-        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg");
-        contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES);
-
-        return new ImageCapture.OutputFileOptions.Builder(
-                getContentResolver(),
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues
-        ).build();
     }
 
     /*
@@ -334,54 +354,111 @@ public class OCR extends MainActivity {
 
     }
 
-    public void addNote(String title, String note) {
+    /*
+     * Add note to the database
+     */
+    public void addNote() {
 
-        if (title.isEmpty()) {
-            Toast toast = Toast.makeText(this, getString(R.string.toast_title_cannot_be_empty), Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
+        EditText ocrNoteTitleEditText = findViewById(R.id.ocrNoteTitleEditText);
+        EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
+        String title = ocrNoteTitleEditText.getText().toString();
+        String note = ocrNoteDetailEditText.getText().toString();
 
-        if (note.isEmpty()) {
-            Toast toast = Toast.makeText(this, getString(R.string.toast_note_detail_cannot_be_empty), Toast.LENGTH_SHORT);
-            toast.show();
-            return;
-        }
-
+        // Create a new ContentValues object
         ContentValues values = new ContentValues();
         values.put(NoteDatabaseHelper.KEY_TITLE, title);
         values.put(NoteDatabaseHelper.KEY_NOTE, note);
+
+        // Insert the new note into the database
         long result = database.insert(NoteDatabaseHelper.TABLE_NAME, null, values);
-        if (result > 0) {
+        if (result > 0) { // if result > 0, note added successfully
             Log.i(TAG, "Note titled: " + title + " added");
             Toast toast = Toast.makeText(this, getString(R.string.word_note) + " " + title + " " + getString(R.string.word_added), Toast.LENGTH_SHORT);
             toast.show();
 
             // Clear title, imagePlaceholder, and textRecognitionContainer
-            EditText ocrNoteTitleEditText = findViewById(R.id.ocrNoteTitleEditText);
-            ocrNoteTitleEditText.setText("");
+            clearScreen();
 
-            ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
-            imagePlaceholder.setImageResource(R.drawable.image_placeholder);
-
-            EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
-            ocrNoteDetailEditText.setText("");
-
-            LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
-            textRecognitionContainer.setVisibility(View.GONE);
-
-            LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
-            multilineEditTextContainer.setVisibility(View.GONE);
-
-            LinearLayout btnAddNoteContainer = findViewById(R.id.btnAddNoteContainer);
-            btnAddNoteContainer.setVisibility(View.GONE);
-
-        } else {
+        } else { // if result <= 0, note failed to add
             Log.i(TAG, "Note titled: " + title + " failed to add");
             Toast toast = Toast.makeText(this, getString(R.string.word_note) + " " + title + " " + getString(R.string.word_failed_to_add), Toast.LENGTH_SHORT);
             toast.show();
         }
     }
 
+    /*
+     * Clear screen
+     */
+    private void clearScreen() {
+        EditText ocrNoteTitleEditText = findViewById(R.id.ocrNoteTitleEditText);
+        ocrNoteTitleEditText.setText("");
 
+        ImageView imagePlaceholder = findViewById(R.id.imagePlaceholder);
+        imagePlaceholder.setImageResource(R.drawable.image_placeholder);
+
+        EditText ocrNoteDetailEditText = findViewById(R.id.ocrNoteDetailEditText);
+        ocrNoteDetailEditText.setText("");
+
+        LinearLayout textRecognitionContainer = findViewById(R.id.textRecognitionContainer);
+        textRecognitionContainer.setVisibility(View.GONE);
+
+        LinearLayout multilineEditTextContainer = findViewById(R.id.multilineEditTextContainer);
+        multilineEditTextContainer.setVisibility(View.GONE);
+
+        LinearLayout btnAddNoteContainer = findViewById(R.id.btnAddNoteContainer);
+        btnAddNoteContainer.setVisibility(View.GONE);
+
+        this.setSaveConfirmed(false);
+    }
+
+    /*
+     * Show confirm save dialog
+     */
+    private void showConfirmSaveDialog() {
+
+        boolean save_confirmed = false;
+
+        // Inflate the custom dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_confirm_savenote, null);
+
+        // Create the AlertDialog
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        // Set up the buttons
+        Button btnConfirm = dialogView.findViewById(R.id.btnConfirm);
+        Button btnCancel = dialogView.findViewById(R.id.btnCancel);
+
+        btnConfirm.setOnClickListener(view -> {
+            // Confirm save
+            setSaveConfirmed(true);
+            dialog.dismiss();
+            addNote();
+        });
+
+        btnCancel.setOnClickListener(view -> {
+            // Cancel save
+            setSaveConfirmed(false);
+            dialog.dismiss();
+        });
+
+        // Show the dialog
+        dialog.show();
+    }
+
+    /*
+     * Setter of save_confirmed
+     */
+    public void setSaveConfirmed(boolean save_confirmed) {
+        this.save_confirmed = save_confirmed;
+    }
+
+    /*
+     * Getter of save_confirmed
+     */
+    public boolean getSaveConfirmed() {
+        return this.save_confirmed;
+    }
 }
