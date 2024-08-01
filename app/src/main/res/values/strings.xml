@@ -130,4 +130,8 @@ The success of the books and films has allowed the Harry Potter franchise to exp
     <string name="word_note">Note</string>
     <string name="word_added">added</string>
     <string name="word_failed_to_add">failed to add</string>
+    <string name="dialogtitle_confirm_save">Confirm Save Note</string>
+    <string name="dialogmessage_confirm_save">Do you want to save this note?</string>
+    <string name="button_label_confirm">Confirm</string>
+    <string name="button_label_cancel">Cancel</string>
 </resources>

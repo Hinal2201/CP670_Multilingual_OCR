@@ -1,35 +1,46 @@
 [versions]
+activity = "1.9.0"
 agp = "8.4.0"
+androidxJunit = "1.1.3"
+appcompat = "1.7.0"
 appcompatVersion = "1.4.1"
 cameraCore = "1.3.4"
+constraintlayout = "2.1.4"
+espressoCore = "3.5.1"
+espressoCoreVersion = "3.4.0"
 fragmentKtx = "1.8.0"
 junit = "4.13.2"
 junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.7.0"
 material = "1.12.0"
-activity = "1.9.0"
-constraintlayout = "2.1.4"
-textRecognition = "16.1.3"
 recyclerview = "1.3.2"
+rules = "1.6.1"
+textRecognition = "16.1.3"
+textRecognitionVersion = "16.0.0"
 
 [libraries]
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activity" }
 appcompat-v141 = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 camera-camera2 = { module = "androidx.camera:camera-camera2", version.ref = "cameraCore" }
 camera-core = { module = "androidx.camera:camera-core", version.ref = "cameraCore" }
+camera-extensions = { module = "androidx.camera:camera-extensions", version.ref = "cameraCore" }
 camera-lifecycle = { module = "androidx.camera:camera-lifecycle", version.ref = "cameraCore" }
 camera-view = { module = "androidx.camera:camera-view", version.ref = "cameraCore" }
+core = { module = "androidx.test:core", version.ref = "rules" }
+espresso-core-v340 = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+junit-v113 = { module = "androidx.test.ext:junit", version.ref = "androidxJunit" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+rules = { module = "androidx.test:rules", version.ref = "rules" }
+runner = { module = "androidx.test:runner", version.ref = "rules" }
 text-recognition = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognition" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+text-recognition-v1600 = { module = "com.google.mlkit:text-recognition", version.ref = "textRecognitionVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
