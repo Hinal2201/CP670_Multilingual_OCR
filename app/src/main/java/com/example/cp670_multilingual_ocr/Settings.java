@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -17,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.common.model.DownloadConditions;
@@ -73,6 +75,7 @@ public class Settings extends MainActivity {
                     Intent intent = new Intent(Settings.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
+                    //finish settings activity is called from asynctask when translation complete
                 }
             }
 
@@ -157,6 +160,11 @@ public class Settings extends MainActivity {
 
             c.close();
             database.close();
+            ContextCompat.getMainExecutor(Settings.this).execute(()  -> {
+                Toast.makeText(Settings.this,
+                        getString(R.string.translate_complete),
+                        Toast.LENGTH_SHORT).show();
+            });
             Settings.this.finish();
             return null;
         }

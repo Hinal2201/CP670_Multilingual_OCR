@@ -42,4 +42,6 @@
     <string name="dialogmessage_confirm_save">Quieres guardar esta nota?</string>
     <string name="button_label_confirm">Confirmar</string>
     <string name="button_label_cancel">Cancelar</string>
+    <string name="toast_note_detail_cannot_be_empty">El detalle de la nota no puede estar vacío</string>
+    <string name="translate_complete">¡Notas existentes traducidas!</string>
 </resources>
