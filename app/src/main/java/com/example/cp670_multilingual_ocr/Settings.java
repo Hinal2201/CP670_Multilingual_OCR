@@ -157,7 +157,7 @@ public class Settings extends MainActivity {
 
             c.close();
             database.close();
-            finish();
+            Settings.this.finish();
             return null;
         }
     }
