@@ -126,7 +126,6 @@ public class Settings extends MainActivity {
 
             final Translator myTranslator = Translation.getClient(options);
             DownloadConditions conditions = new DownloadConditions.Builder()
-                    .requireWifi()
                     .build();
 
             //We run this task synchronously as we are already inside async, and rest of code needs this to be complete
@@ -144,7 +143,7 @@ public class Settings extends MainActivity {
                 try {
                     Task<String> translation = myTranslator.translate(c.getString(noteColIndex));
                     while(!translation.isComplete()){
-                        Thread.sleep(500);
+                        Thread.sleep(50);
                     }
                     String translatedText = translation.getResult();
                     ContentValues values = new ContentValues();
