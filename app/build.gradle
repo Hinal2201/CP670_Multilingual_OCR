@@ -45,6 +45,7 @@ dependencies {
     implementation libs.fragment.ktx
     implementation libs.appcompat.v141
     implementation libs.text.recognition.v1600
+    implementation libs.translate
 
     testImplementation libs.junit
     androidTestImplementation libs.core
