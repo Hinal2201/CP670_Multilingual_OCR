@@ -27,6 +27,7 @@
     To customize your settings, follow these steps:<br/>
     <b>1. Go to the Settings section.</b><br/>
     <b>2. Choose your preferred language.</b><br/>
+    The entire user interface will update to the selected language, and all saved notes will be automatically translated to the chosen language.
       ]]>
     </string>
     <string name="ocr_instructions">

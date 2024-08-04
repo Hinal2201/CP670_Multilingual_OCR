@@ -12,7 +12,7 @@
 
     <string name="authors">Autores: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
     <string name="version">Versión: 1.0</string>
-    <string name="usage_instructions">Instructions d\'utilisation:</string>
+    <string name="usage_instructions">Instrucciones de uso:</string>
     <string name="help_ocr">Utilice la función OCR para escanear texto de imágenes.</string>
     <string name="help_notes">Administre sus notas en la sección Lista de notas.</string>
     <string name="help_settings">Personaliza tus preferencias en la sección Configuración.</string>
@@ -22,6 +22,7 @@
     Para personalizar su configuración, siga estos pasos:<br/>
     <b>1. Vaya a la sección Configuración.</b><br/>
     <b>2. Elige tu idioma preferido.</b><br/>
+    Toda la interfaz de usuario se actualizará al idioma seleccionado y todas las notas guardadas se traducirán automáticamente al idioma elegido.
       ]]>
     </string>
     <string name="ocr_instructions">
