@@ -97,7 +97,6 @@ public class Settings extends MainActivity {
     public int getLayoutResource(){
         return R.layout.activity_settings;
     }
-
     private class TranslateDb extends AsyncTask<String,Void,Void>{
         @Override
         protected Void doInBackground(String... strings) {
@@ -168,5 +167,4 @@ public class Settings extends MainActivity {
             return null;
         }
     }
-
 }
