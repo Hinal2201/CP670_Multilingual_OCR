@@ -12,14 +12,71 @@
 
     <string name="authors">Autores: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
     <string name="version">Versión: 1.0</string>
-    <string name="usage_instructions">
-        <b>Instrucciones de uso:</b> \n\n
-        1. Utilice la función OCR para escanear texto de imágenes.\n
-        2. Administre sus notas en la sección Lista de notas.\n
-        3. Personaliza tus preferencias en la sección Configuración.\n
-        4. Consulte esta sección de Ayuda para obtener ayuda.
+    <string name="usage_instructions">Instrucciones de uso:</string>
+    <string name="help_ocr">Utilice la función OCR para escanear texto de imágenes.</string>
+    <string name="help_notes">Administre sus notas en la sección Lista de notas.</string>
+    <string name="help_settings">Personaliza tus preferencias en la sección Configuración.</string>
+    <string name="help_assistance">Consulte esta sección de Ayuda para obtener ayuda.</string>
+    <string name="settings_help_details">
+        <![CDATA[
+    Para personalizar su configuración, siga estos pasos:<br/>
+    <b>1. Vaya a la sección Configuración.</b><br/>
+    <b>2. Elige tu idioma preferido.</b><br/>
+    Toda la interfaz de usuario se actualizará al idioma seleccionado y todas las notas guardadas se traducirán automáticamente al idioma elegido.
+      ]]>
     </string>
-
+    <string name="ocr_instructions">
+        <![CDATA[
+        Para utilizar la función OCR, siga estos pasos:<br/>
+        <b>Toma una foto:</b><br/>
+        1. Toque el botón "Tomar fotografía".<br/>
+        2. Captura una imagen usando la cámara.<br/>
+        3. Se mostrará la imagen capturada y podrás proceder a reconocer el texto.<br/><br/>
+        <b>Seleccionar de la galería:</b><br/>
+        1. Toque el botón "Desde la galería".<br/>
+        2. Elige una imagen de la galería de tu dispositivo.<br/>
+        3. Se mostrará la imagen seleccionada y podrás proceder a reconocer el texto.<br/><br/>
+        <b>Reconocimiento de texto:</b><br/>
+        1. Toque el botón "Reconocer texto".<br/>
+        2. La aplicación procesará la imagen y extraerá el texto.<br/>
+        3. El texto reconocido se mostrará en el área de texto debajo de la imagen.<br/><br/>
+        <b>Añadir la nota:</b><br/>
+        1. Ingrese un título para su nota en el campo "Título de la nota".<br/>
+        2. Asegúrese de que el texto reconocido se muestre en el campo "Detalles de la nota".<br/>
+        3. Toque el botón "Agregar nota" para guardar su nota.<br/>
+        4. Confirme la acción de guardar en el cuadro de diálogo que aparece.<br/><br/>
+        ]]>
+    </string>
+    <string name="note_instructions">
+        <![CDATA[
+    Para administrar sus notas en la sección Lista de notas, siga estos pasos:<br/><br/>
+    <b>1. Ver notas:</b><br/>
+    - La sección Lista de notas muestra todas las notas guardadas.<br/>
+    - Cada nota está representada por su título.<br/><br/>
+    <b>2. Agrega una nota:</b><br/>
+    - Toque el botón "Agregar nota" en la esquina inferior derecha.<br/>
+    - Ingrese el título y los detalles de su nota.<br/>
+    - Toque el botón "Agregar nota" para guardar su nota.<br/><br/>
+    <b>3. Eliminar una nota:</b><br/>
+    - Toque cualquier nota para ver sus detalles.<br/>
+    - Toque el botón "Eliminar" para quitar la nota.<br/>
+    - Confirme la eliminación en el cuadro de diálogo que aparece.
+       ]]>
+</string>
+    <string name="help_assistance_details">
+         <![CDATA[
+    Esta sección de ayuda ofrece asistencia sobre el uso de varias funciones de la aplicación. Estas son las secciones disponibles:<br/><br/>
+    <b>1. Función de OCR:</b><br/>
+    - Aprenda a utilizar la función OCR para escanear texto de imágenes.<br/>
+    - Incluye pasos para tomar fotografías, seleccionar imágenes de la galería y reconocer texto.<br/><br/>
+    <b>2. Sección de lista de notas:</b><br/>
+    - Descubra cómo gestionar sus notas de forma eficaz.<br/>
+    - Incluye instrucciones para agregar y eliminar notas.<br/><br/>
+    <b>3. Sección de configuración:</b><br/>
+    - Aprenda a personalizar la configuración de su aplicación.<br/>
+    - Incluye instrucciones para cambiar el idioma de la aplicación y otras preferencias.<br/><br/>
+    ]]>
+</string>
     <string name="notes_list">Página de lista de notas</string>
     <string name="note_title">título</string>
     <string name="note_note">nota</string>
@@ -44,4 +101,5 @@
     <string name="button_label_cancel">Cancelar</string>
     <string name="toast_note_detail_cannot_be_empty">El detalle de la nota no puede estar vacío</string>
     <string name="translate_complete">¡Notas existentes traducidas!</string>
+    <string name="settings_screenshot_desc">Captura de pantalla de la configuración del idioma</string>
 </resources>

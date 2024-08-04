@@ -16,14 +16,72 @@
 
     <string name="authors">Authors: Aghila Varghese, David Moreno-Bautista, Hinal Bharatbhai Arya, Khalil Choudhry, Wai Kei Lai</string>
     <string name="version">Version: 1.0</string>
-    <string name="usage_instructions">
-        <b>Usage Instructions:</b> \n\n
-        1. Use the OCR feature to scan text from images.\n
-        2. Manage your notes in the Notes List section.\n
-        3. Customize your preferences in the Settings section.\n
-        4. Refer to this Help section for assistance.
-    </string>
+    <string name="usage_instructions">Usage Instructions:</string>
 
+    <string name="help_ocr">Use the OCR feature to scan text from images.</string>
+    <string name="help_notes">Manage your notes in the Notes List section.</string>
+    <string name="help_settings">Customize your preferences in the Settings section.</string>
+    <string name="help_assistance">Refer to this Help section for assistance.</string>
+    <string name="settings_help_details">
+        <![CDATA[
+    To customize your settings, follow these steps:<br/>
+    <b>1. Go to the Settings section.</b><br/>
+    <b>2. Choose your preferred language.</b><br/>
+    The entire user interface will update to the selected language, and all saved notes will be automatically translated to the chosen language.
+      ]]>
+    </string>
+    <string name="ocr_instructions">
+        <![CDATA[
+        To use the OCR feature, follow these steps:<br/>
+        <b>Take a Picture:</b><br/>
+        1. Tap the "Take Picture" button.<br/>
+        2. Capture an image using the camera.<br/>
+        3. The captured image will be displayed, and you can proceed to recognize text.<br/><br/>
+        <b>Select from Gallery:</b><br/>
+        1. Tap the "From Gallery" button.<br/>
+        2. Choose an image from your device\'s gallery.<br/>
+        3. The selected image will be displayed, and you can proceed to recognize text.<br/><br/>
+        <b>Text Recognition:</b><br/>
+        1. Tap the "Recognize Text" button.<br/>
+        2. The app will process the image and extract the text.<br/>
+        3. The recognized text will be displayed in the text area below the image.<br/><br/>
+        <b>Add Note:</b><br/>
+        1. Enter a title for your note in the "Note Title" field.<br/>
+        2. Ensure that the recognized text is displayed in the "Note Details" field.<br/>
+        3. Tap the "Add Note" button to save your note.<br/>
+        4. Confirm the save action in the dialog that appears.<br/><br/>
+        ]]>
+    </string>
+    <string name="note_instructions">
+        <![CDATA[
+    To manage your notes in the Notes List section, follow these steps:<br/><br/>
+    <b>1. View Notes:</b><br/>
+    - The Notes List section displays all your saved notes.<br/>
+    - Each note is represented by its title.<br/><br/>
+    <b>2. Add a Note:</b><br/>
+    - Tap the "Add Note" button at the bottom right corner.<br/>
+    - Enter the title and details for your note.<br/>
+    - Tap the "Add Note" button to save your note.<br/><br/>
+    <b>3. Delete a Note:</b><br/>
+    - Tap on any note to view its details.<br/>
+    - Tap the "Delete" button to remove the note.<br/>
+    - Confirm the deletion in the dialog that appears.
+       ]]>
+</string>
+    <string name="help_assistance_details">
+         <![CDATA[
+    This Help section provides assistance on using various features of the app. Here are the available sections:<br/><br/>
+    <b>1. OCR Feature:</b><br/>
+    - Learn how to use the OCR feature to scan text from images.<br/>
+    - Includes steps for taking pictures, selecting images from the gallery, and recognizing text.<br/><br/>
+    <b>2. Notes List Section:</b><br/>
+    - Find out how to manage your notes effectively.<br/>
+    - Includes instructions for adding and deleting notes.<br/><br/>
+    <b>3. Settings Section:</b><br/>
+    - Learn how to customize your app settings.<br/>
+    - Includes instructions for changing the app language and other preferences.<br/><br/>
+    ]]>
+</string>
     <string-array name="language_settings_array">
         <item>English</item>
         <item>Español</item>
@@ -135,4 +193,5 @@ The success of the books and films has allowed the Harry Potter franchise to exp
     <string name="button_label_confirm">Confirm</string>
     <string name="button_label_cancel">Cancel</string>
     <string name="translate_complete">Existing notes translated!</string>
+    <string name="settings_screenshot_desc">Screenshot of language settings</string>
 </resources>
