@@ -134,4 +134,5 @@ The success of the books and films has allowed the Harry Potter franchise to exp
     <string name="dialogmessage_confirm_save">Do you want to save this note?</string>
     <string name="button_label_confirm">Confirm</string>
     <string name="button_label_cancel">Cancel</string>
+    <string name="translate_complete">Existing notes translated!</string>
 </resources>
