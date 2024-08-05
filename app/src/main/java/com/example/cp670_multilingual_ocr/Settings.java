@@ -121,6 +121,7 @@ public class Settings extends MainActivity {
 
             Cursor c = database.rawQuery("SELECT * from "+ NoteDatabaseHelper.TABLE_NAME, new String[] {});
             int noteColIndex = c.getColumnIndex(NoteDatabaseHelper.KEY_NOTE);
+            int titleColIndex = c.getColumnIndex(NoteDatabaseHelper.KEY_TITLE);
             c.moveToFirst();
 
             final Translator myTranslator = Translation.getClient(options);
@@ -142,11 +143,19 @@ public class Settings extends MainActivity {
                 try {
                     Task<String> translation = myTranslator.translate(c.getString(noteColIndex));
                     while(!translation.isComplete()){
-                        Thread.sleep(50);
+                        Thread.sleep(20);
                     }
                     String translatedText = translation.getResult();
+
+                    Task<String> translationTitle = myTranslator.translate(c.getString(titleColIndex));
+                    while(!translationTitle.isComplete()){
+                        Thread.sleep(10);
+                    }
+                    String titleTranslated = translationTitle.getResult();
+
                     ContentValues values = new ContentValues();
                     values.put(NoteDatabaseHelper.KEY_NOTE, translatedText);
+                    values.put(NoteDatabaseHelper.KEY_TITLE, titleTranslated);
                     @SuppressLint("Range")
                     String id = String.valueOf(c.getInt(c.getColumnIndex(NoteDatabaseHelper.KEY_ID)));
                     database.update(NoteDatabaseHelper.TABLE_NAME, values, "id = "+id, new String[]{});
